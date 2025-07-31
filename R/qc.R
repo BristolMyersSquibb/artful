@@ -42,19 +42,40 @@ rtf_to_pdf <- function(
     }
   } else {
     outdir <- dirname(pdf_path)
+    if (!dir.exists(outdir)) {
+      dir.create(outdir, recursive = TRUE)
+    }
   }
 
-  system2(
+  result <- system2(
     soffice_path,
     args = c(
       "--headless",
       "--convert-to",
       "pdf",
       "--outdir",
-      outdir,
+      shQuote(outdir),
       shQuote(rtf_path)
     ),
     stdout = FALSE,
     stderr = FALSE
   )
+
+  if (result != 0) {
+    stop("LibreOffice conversion failed with exit code: ", result)
+  }
+
+  # If pdf_path was specified as a file (not directory),
+  # LibreOffice creates the PDF with the same base name as the RTF
+  # so we may need to rename it
+  if (!dir.exists(pdf_path) && !endsWith(pdf_path, "/")) {
+    rtf_basename <- tools::file_path_sans_ext(basename(rtf_path))
+    generated_pdf <- file.path(outdir, paste0(rtf_basename, ".pdf"))
+
+    if (file.exists(generated_pdf) && generated_pdf != pdf_path) {
+      file.rename(generated_pdf, pdf_path)
+    }
+  }
+
+  return(invisible(pdf_path))
 }
