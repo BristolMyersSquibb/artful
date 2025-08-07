@@ -20,9 +20,20 @@ rtf_to_html <- function(file) {
     )
   }
 
+  # OS-specific Pandoc syntax
+  os_type <- Sys.info()["sysname"]
+  
+  if (os_type == "Darwin") {
+    # macOS uses space-separated syntax
+    pandoc_args <- c("--from", "rtf", "--to", "html", shQuote(file))
+  } else {
+    # Linux/Windows use equals syntax
+    pandoc_args <- c("--from=rtf", "--to=html", shQuote(file))
+  }
+  
   result <- system2(
     "pandoc",
-    args = c("--from", "rtf", "--to", "html", shQuote(file)),
+    args = pandoc_args,
     stdout = TRUE,
     stderr = TRUE
   )
@@ -34,6 +45,7 @@ rtf_to_html <- function(file) {
 
   return(paste0(result, collapse = "\n"))
 }
+
 
 #' Convert a string of HTML into a dataframe
 #'
