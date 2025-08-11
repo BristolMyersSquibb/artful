@@ -4,6 +4,8 @@ test_that("Coverage across all examples, without stats parsing", {
     full.names = TRUE
   )
 
+  skip_if(length(files), "Example files not found")
+
   safe_rtf_to_ard <- safely(rtf_to_ard)
 
   results <- map(
