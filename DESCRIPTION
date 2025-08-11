@@ -11,6 +11,7 @@ Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "rd",
 RoxygenNote: 7.3.2
 Imports: 
     dplyr,
+    pandoc,
     purrr,
     readr,
     rvest,

@@ -1,7 +1,7 @@
 #' Convert an RTF file to HTML using Pandoc
 #'
 #' This function takes the path to an input RTF file and uses the Pandoc
-#' command-line tool to convert it to HTML.
+#' R package to convert it to HTML.
 #'
 #' @param file A string, the path to the input .rtf file.
 #'
@@ -13,37 +13,34 @@ rtf_to_html <- function(file) {
     stop("Input RTF file does not exist: ", file)
   }
 
-  if (Sys.which("pandoc") == "") {
-    stop(
-      "Pandoc command not found. ",
-      "Please ensure Pandoc is installed and in your system's PATH."
-    )
-  }
+  # Check if pandoc is available - if not, let pandoc package handle it
+  # The pandoc package will automatically handle installation when needed
 
-  # OS-specific Pandoc syntax
-  os_type <- Sys.info()["sysname"]
+  # Create temporary output file for HTML
+  temp_html <- tempfile(fileext = ".html")
   
-  if (os_type == "Darwin") {
-    # macOS uses space-separated syntax
-    pandoc_args <- c("--from", "rtf", "--to", "html", shQuote(file))
-  } else {
-    # Linux/Windows use equals syntax
-    pandoc_args <- c("--from=rtf", "--to=html", shQuote(file))
-  }
-  
-  result <- system2(
-    "pandoc",
-    args = pandoc_args,
-    stdout = TRUE,
-    stderr = TRUE
+  # Convert RTF to HTML using pandoc package
+  tryCatch(
+    {
+      pandoc::pandoc_convert(
+        file = file,
+        from = "rtf",
+        to = "html",
+        output = temp_html
+      )
+    },
+    error = function(e) {
+      stop("Running Pandoc failed with following error: ", e$message)
+    }
   )
-
-  status <- attr(result, "status", TRUE)
-  if (length(status) > 0 && status > 0) {
-    stop(c("Running Pandoc failed with following error", result))
-  }
-
-  return(paste0(result, collapse = "\n"))
+  
+  # Read the HTML content and return
+  html_content <- readr::read_file(temp_html)
+  
+  # Clean up temporary file
+  unlink(temp_html)
+  
+  return(html_content)
 }
 
 
