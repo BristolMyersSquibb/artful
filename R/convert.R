@@ -13,13 +13,10 @@ rtf_to_html <- function(file) {
     stop("Input RTF file does not exist: ", file)
   }
 
-  # Check if pandoc is available - if not, let pandoc package handle it
-  # The pandoc package will automatically handle installation when needed
-
-  # Create temporary output file for HTML
   temp_html <- tempfile(fileext = ".html")
-  
-  # Convert RTF to HTML using pandoc package
+
+  # The pandoc package will automatically handle installation of pandoc binary
+  # if unavailable.
   tryCatch(
     {
       pandoc::pandoc_convert(
@@ -33,13 +30,11 @@ rtf_to_html <- function(file) {
       stop("Running Pandoc failed with following error: ", e$message)
     }
   )
-  
-  # Read the HTML content and return
+
   html_content <- readr::read_file(temp_html)
-  
-  # Clean up temporary file
+
   unlink(temp_html)
-  
+
   return(html_content)
 }
 
