@@ -14,6 +14,6 @@ Character vector of HTML.
 }
 \description{
 This function takes the path to an input RTF file and uses the Pandoc
-command-line tool to convert it to HTML.
+R package to convert it to HTML.
 }
 \keyword{internal}
