@@ -33,17 +33,6 @@ example_data <- function(...) {
   system.file("extdata", "examples", ..., package = "artful")
 }
 
-example_1 <- cards::ADSL |>
-  dplyr::mutate(AGEGR1 = factor(AGEGR1, levels = c("<65", "65-80", ">80"))) |>
-  cards::ard_stack(
-    .by = ARM,
-    cards::ard_continuous(variables = "AGE"),
-    cards::ard_categorical(variables = c("AGEGR1", "SEX")),
-    .attributes = TRUE,
-    .total_n = TRUE,
-    .overall = TRUE
-  )
-
 # ---- Slide 7 -----------------------------------------------------------------
 
 # ---- rt-dm-demo.rtf ----
