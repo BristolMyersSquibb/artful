@@ -202,7 +202,114 @@ rt_dm_demo <- function(input = example_data("rt-dm-demo.rtf")) {
 rt_dm_demo() |>
   gtsummary_table()
 
-# # Method 2: just recreate the GT table exactly, bypassing the use of the ARD:
+# ---- rt-dm-basedz.rtf ----
+rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
+  temp_rtf <- withr::local_tempfile(fileext = ".rtf")
+
+  input |>
+    read_file() |>
+    artful:::rtf_indentation() |>
+    write_file(temp_rtf)
+
+  ard_ish <- artful:::rtf_to_html(temp_rtf) |>
+    artful:::html_to_dataframe() |>
+    artful:::manage_exceptions() |>
+    artful:::strip_pagination() |>
+    artful:::strip_indentation() |>
+    artful:::pivot_group()
+
+  ard_ish_parsed <- ard_ish |>
+    mutate(
+      stat = if_else(
+        str_detect(variable_label1, "n \\(%\\)$") & stat == "0",
+        "0 ( 0)",
+        stat
+      )
+    ) |>
+    separate_longer_delim(
+      cols = c(variable_level, stat),
+      delim = ", "
+    ) |>
+    mutate(
+      stat_name = case_when(
+        variable_level == "N" ~ "N",
+        variable_level == "MEAN" ~ "mean",
+        variable_level == "MEDIAN" ~ "median",
+        variable_level == "SD" ~ "sd",
+        variable_level == "Q1" ~ "p25",
+        variable_level == "Q3" ~ "p75",
+        variable_level == "MAX" ~ "min",
+        variable_level == "MIN" ~ "max",
+        .default = NA
+      )
+    ) |>
+    mutate(
+      .id = row_number(),
+      stat_list = str_extract_all(stat, "[\\d.]+")
+    ) |>
+    mutate(
+      n_values = lengths(stat_list)
+    ) |>
+    unnest(stat_list) |>
+    mutate(
+      stat_name = case_when(
+        n_values > 1 & row_number() == 1 ~ "n",
+        n_values > 1 & row_number() == 2 ~ "p",
+        .default = stat_name
+      ),
+      stat = stat_list,
+      .by = .id
+    ) |>
+    select(
+      -c(.id, stat_list, n_values)
+    ) |>
+    mutate(stat_name = if_else(is.na(stat_name), "n", stat_name)) |>
+    dplyr::filter(!is.na(stat)) |>
+    left_join(stat_lookup)
+
+  ard <- ard_ish_parsed |>
+    mutate(
+      group1_level = stringr::str_extract(
+        group1_level,
+        ".*?\\S+(?=\\s*(?:\\(N=|N=))"
+      )
+    )
+
+  ard <- ard |>
+    rename(variable = variable_label1, variable2_level = variable_label2) |>
+    relocate(variable, .after = group1_level)
+
+  ard_card <- ard |>
+    mutate(
+      variable_level = if_else(
+        variable_level %in%
+          c("N", "MEAN", "SD", "MEDIAN", "Q1", "Q3", "MIN", "MAX"),
+        NA,
+        variable_level
+      ),
+      group1_level = map(group1_level, ~.x),
+      variable_level = map(variable_level, ~ if (is.na(.x)) NULL else .x),
+      stat = map(stat, ~ as.numeric(.x)),
+      context = if_else(
+        stat_name %in% c("n", "p"),
+        "categorical",
+        "continuous"
+      ),
+      fmt_fun = map(context, ~ if (.x == "continuous") 1L else 0L),
+      warning = map(1:n(), ~NULL),
+      error = map(1:n(), ~NULL)
+    ) |>
+    cards::as_card()
+
+  return(ard_card)
+}
+
+rt_dm_basedz() |>
+  gtsummary_table()
+
+# ---- Alternate method to bypass ARD ------------------------------------------
+# Recreate the GT tables exactly, bypassing the use of the ARD:
+
 # rt_dm_demo_table <- function() {
 #   rt_dm_demo_gt_data <- data.frame(
 #     Demographics = c(
@@ -338,112 +445,6 @@ rt_dm_demo() |>
 
 # rt_dm_demo_table()
 
-# ---- rt-dm-basedz.rtf ----
-rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
-  temp_rtf <- withr::local_tempfile(fileext = ".rtf")
-
-  input |>
-    read_file() |>
-    artful:::rtf_indentation() |>
-    write_file(temp_rtf)
-
-  ard_ish <- artful:::rtf_to_html(temp_rtf) |>
-    artful:::html_to_dataframe() |>
-    artful:::manage_exceptions() |>
-    artful:::strip_pagination() |>
-    artful:::strip_indentation() |>
-    artful:::pivot_group()
-
-  ard_ish_parsed <- ard_ish |>
-    mutate(
-      stat = if_else(
-        str_detect(variable_label1, "n \\(%\\)$") & stat == "0",
-        "0 ( 0)",
-        stat
-      )
-    ) |>
-    separate_longer_delim(
-      cols = c(variable_level, stat),
-      delim = ", "
-    ) |>
-    mutate(
-      stat_name = case_when(
-        variable_level == "N" ~ "N",
-        variable_level == "MEAN" ~ "mean",
-        variable_level == "MEDIAN" ~ "median",
-        variable_level == "SD" ~ "sd",
-        variable_level == "Q1" ~ "p25",
-        variable_level == "Q3" ~ "p75",
-        variable_level == "MAX" ~ "min",
-        variable_level == "MIN" ~ "max",
-        .default = NA
-      )
-    ) |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
-    ) |>
-    mutate(
-      n_values = lengths(stat_list)
-    ) |>
-    unnest(stat_list) |>
-    mutate(
-      stat_name = case_when(
-        n_values > 1 & row_number() == 1 ~ "n",
-        n_values > 1 & row_number() == 2 ~ "p",
-        .default = stat_name
-      ),
-      stat = stat_list,
-      .by = .id
-    ) |>
-    select(
-      -c(.id, stat_list, n_values)
-    ) |>
-    mutate(stat_name = if_else(is.na(stat_name), "n", stat_name)) |>
-    dplyr::filter(!is.na(stat)) |>
-    left_join(stat_lookup)
-
-  ard <- ard_ish_parsed |>
-    mutate(
-      group1_level = stringr::str_extract(
-        group1_level,
-        ".*?\\S+(?=\\s*(?:\\(N=|N=))"
-      )
-    )
-
-  ard <- ard |>
-    rename(variable = variable_label1, variable2_level = variable_label2) |>
-    relocate(variable, .after = group1_level)
-
-  ard_card <- ard |>
-    mutate(
-      variable_level = if_else(
-        variable_level %in%
-          c("N", "MEAN", "SD", "MEDIAN", "Q1", "Q3", "MIN", "MAX"),
-        NA,
-        variable_level
-      ),
-      group1_level = map(group1_level, ~.x),
-      variable_level = map(variable_level, ~ if (is.na(.x)) NULL else .x),
-      stat = map(stat, ~ as.numeric(.x)),
-      context = if_else(
-        stat_name %in% c("n", "p"),
-        "categorical",
-        "continuous"
-      ),
-      fmt_fun = map(context, ~ if (.x == "continuous") 1L else 0L),
-      warning = map(1:n(), ~NULL),
-      error = map(1:n(), ~NULL)
-    ) |>
-    cards::as_card()
-
-  return(ard_card)
-}
-
-rt_dm_basedz() |>
-  gtsummary_table()
-
-# # Method 2: bypass ARD and produce GT table directly:
 # rt_dm_basedz_table <- function() {
 #   rt_dm_basedz_gt_data <- tibble(
 #     characteristic = c(
