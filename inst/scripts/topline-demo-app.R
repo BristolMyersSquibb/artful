@@ -301,23 +301,23 @@ rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
 # ---- Create tables -----------------------------------------------------------
 # ---- rt-dm-demo ----
 # Unedited
-rt_dm_demo() |>
-  gtsummary_table()
+# rt_dm_demo() |>
+#   gtsummary_table()
 
 # Remove geography info
-rt_dm_demo() |>
-  filter(variable != "COUNTRY BY GEOGRAPHIC REGION n(%)") |>
-  gtsummary_table()
+# rt_dm_demo() |>
+#   filter(variable != "COUNTRY BY GEOGRAPHIC REGION n(%)") |>
+#   gtsummary_table()
 
 # Remove one type of statistic: ERRORS!
-rt_dm_demo() |>
-  filter(stat_name != "p25") |>
-  gtsummary_table()
+# rt_dm_demo() |>
+#   filter(stat_name != "p25") |>
+#   gtsummary_table()
 
 # ---- rt-dm-basedz() ----
 # Unedited
-rt_dm_basedz() |>
-  gtsummary_table()
+# rt_dm_basedz() |>
+#   gtsummary_table()
 
 # ---- Alternate method to bypass ARD ------------------------------------------
 # Recreate the GT tables exactly, bypassing the use of the ARD:
@@ -574,3 +574,539 @@ rt_dm_basedz() |>
 # }
 
 # rt_dm_basedz_table()
+
+rt_ef_acr20 <- function(input = example_data("rt-ef-acr20.rtf")) {
+  temp_rtf <- withr::local_tempfile(fileext = ".rtf")
+
+  input |>
+    read_file() |>
+    artful:::rtf_indentation() |>
+    artful:::rtf_linebreaks() |>
+    write_file(temp_rtf)
+
+  ard_ish <- artful:::rtf_to_html(temp_rtf) |>
+    artful:::html_to_dataframe() |>
+    artful:::manage_exceptions() |>
+    artful:::strip_pagination() |>
+    artful:::strip_indentation() |>
+    artful:::pivot_group()
+
+  ard_ish_parsed <- ard_ish |>
+    slice(-1:-2) |>
+    mutate(stat = if_else(stat == "N.A.", NA, stat)) |>
+    mutate(
+      .id = row_number(),
+      stat_list = str_extract_all(stat, "[\\d.]+")
+    ) |>
+    mutate(
+      n_values = lengths(stat_list)
+    ) |>
+    unnest(stat_list) |>
+    mutate(
+      stat_name = case_when(
+        str_detect(variable_level, "n \\(%\\)$") &
+          n_values > 1 &
+          row_number() == 1 ~
+          "n",
+        str_detect(variable_level, "n \\(%\\)$") &
+          n_values > 1 &
+          row_number() == 2 ~
+          "p",
+        str_detect(variable_level, "\\(95% CI\\)") &
+          n_values > 1 &
+          row_number() == 1 ~
+          "ci_low",
+        str_detect(variable_level, "\\(95% CI\\)") &
+          n_values > 1 &
+          row_number() == 2 ~
+          "ci_high",
+        variable_level == "P-VALUE" ~ "p_value",
+        .default = NA
+      ),
+      stat = stat_list,
+      .by = .id
+    ) |>
+    select(
+      -c(.id, stat_list, n_values)
+    ) |>
+    dplyr::filter(!is.na(stat)) |>
+    left_join(stat_lookup)
+
+  big_n <- ard_ish_parsed |>
+    distinct(group1_level) |>
+    separate_wider_regex(
+      group1_level,
+      patterns = c(
+        variable_label1 = ".*?\\S+",
+        "\\s+",
+        "(?:\\(N = |N = )",
+        stat = "\\d+",
+        "\\)?"
+      )
+    ) |>
+    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+
+  ard <- ard_ish_parsed |>
+    mutate(
+      group1_level = stringr::str_extract(
+        group1_level,
+        ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
+      )
+    )
+
+  rt_ef_acr20 <- bind_rows(big_n, ard) |>
+    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+
+  rt_ef_acr20 |>
+    mutate(
+      group1 = "Week 16",
+      group1_level = if_else(
+        stat_name == "N_header",
+        variable_label1,
+        group1_level,
+        group1_level
+      ),
+      variable_label1 = if_else(
+        stat_name == "N_header",
+        "TOTAL NUMBER OF SUBJECTS",
+        variable_label1,
+        variable_label1
+      ),
+      stat_name = if_else(
+        stat_name == "N_header",
+        "n",
+        stat_name,
+        stat_name
+      ),
+      stat_label = if_else(
+        stat_label == "N",
+        "n",
+        stat_label,
+        stat_label
+      )
+    ) |>
+    bind_rows(
+      tibble(
+        group1 = rep("Week 16", 2),
+        group1_level = c("DEUC 6 mg", "PBO"),
+        variable_label1 = rep("TOTAL NUMBER OF SUBJECTS", 2),
+        stat_name = rep("p", 2),
+        stat_label = rep("%", 2),
+        stat = rep("100", 2)
+      )
+    ) |>
+    mutate(
+      variable = if_else(
+        is.na(variable_label1),
+        variable_level,
+        variable_label1
+      ),
+      variable_level = if_else(
+        is.na(variable_label1) | variable_level == "(95% CI)",
+        NA,
+        variable_level
+      )
+    ) |>
+    select(-variable_label1) |>
+    relocate(variable, .after = group1_level) |>
+    mutate(
+      stat_name = if_else(
+        variable == "ODDS RATIO VS PLACEBO" & is.na(stat_name),
+        "est",
+        stat_name
+      ),
+      stat_label = if_else(
+        variable == "ODDS RATIO VS PLACEBO" & is.na(stat_name),
+        "estimate",
+        stat_label
+      )
+    ) |>
+    mutate(
+      stat_name = if_else(
+        is.na(stat_name),
+        if_else(as.numeric(stat) %% 1 == 0, "n", "p"),
+        stat_name
+      ),
+      stat_label = if_else(
+        is.na(stat_label),
+        if_else(as.numeric(stat) %% 1 == 0, "n", "%"),
+        stat_label
+      )
+    ) |>
+    mutate(
+      variable_level = if_else(
+        variable == "NON RESPONDERS n (%)" & is.na(variable_level),
+        "TOTAL",
+        variable_level
+      )
+    ) |>
+    cards::as_card()
+}
+
+rt_ef_aacr50 <- function(input = example_data("rt-ef-aacr50.rtf")) {
+
+  temp_rtf <- withr::local_tempfile(fileext = ".rtf")
+
+  input |>
+    read_file() |>
+    artful:::rtf_indentation() |>
+    artful:::rtf_linebreaks() |>
+    write_file(temp_rtf)
+
+  ard_ish <- artful:::rtf_to_html(temp_rtf) |>
+    artful:::html_to_dataframe() |>
+    artful:::manage_exceptions() |>
+    artful:::strip_pagination() |>
+    artful:::strip_indentation() |>
+    artful:::pivot_group()
+
+  ard_ish_parsed <- ard_ish |>
+    dplyr::filter(variable_label1 != "TOTAL NUMBER OF SUBJECTS") |>
+    mutate(stat = if_else(stat == "N.A.", NA, stat)) |>
+    mutate(
+      .id = row_number(),
+      stat_list = str_extract_all(stat, "[\\d.]+")
+    ) |>
+    mutate(
+      n_values = lengths(stat_list)
+    ) |>
+    unnest(stat_list) |>
+    mutate(
+      stat_name = case_when(
+        str_detect(variable_level, "n \\(%\\)$") &
+          n_values > 1 &
+          row_number() == 1 ~
+          "n",
+        str_detect(variable_level, "n \\(%\\)$") &
+          n_values > 1 &
+          row_number() == 2 ~
+          "p",
+        str_detect(variable_label1, "n \\(%\\)$") &
+          n_values > 1 &
+          row_number() == 1 ~
+          "n",
+        str_detect(variable_label1, "n \\(%\\)$") &
+          n_values > 1 &
+          row_number() == 2 ~
+          "p",
+        str_detect(variable_level, "\\(95% CI\\)") &
+          n_values > 1 &
+          row_number() == 1 ~
+          "ci_low",
+        str_detect(variable_level, "\\(95% CI\\)") &
+          n_values > 1 &
+          row_number() == 2 ~
+          "ci_high",
+        variable_label1 == "P-VALUE" & !is.na(stat) ~ "p_value",
+        variable_level == "NON RESPONDERS DUE TO MISSING DATA n (%)" &
+          variable_label1 == "RESPONSE RATE (%)" ~
+          "p",
+        .default = NA
+      ),
+      stat = stat_list,
+      .by = .id
+    ) |>
+    mutate(
+      stat_name = case_when(
+        variable_label1 == "DIFFERENCE VS PLACEBO (%)" &
+          !is.na(stat) &
+          is.na(stat_name) ~
+          "p",
+        variable_label1 == "ODDS RATIO VS PLACEBO" &
+          !is.na(stat) &
+          is.na(stat_name) ~
+          "estimate",
+        .default = stat_name
+      ),
+    ) |>
+    select(
+      -c(.id, stat_list, n_values)
+    ) |>
+    left_join(stat_lookup) |>
+    dplyr::filter(!is.na(stat))
+
+  big_n <- ard_ish_parsed |>
+    distinct(group1_level) |>
+    separate_wider_regex(
+      group1_level,
+      patterns = c(
+        variable_label1 = ".*?\\S+",
+        "\\s+",
+        "(?:\\(N = |N = )",
+        stat = "\\d+",
+        "\\)?"
+      )
+    ) |>
+    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+
+  ard <- ard_ish_parsed |>
+    mutate(
+      group1_level = stringr::str_extract(
+        group1_level,
+        ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
+      )
+    )
+
+  rt_ef_aacr50 <- bind_rows(
+    mutate(big_n, variable_label2 = "WEEK 2"),
+    mutate(big_n, variable_label2 = "WEEK 4"),
+    mutate(big_n, variable_label2 = "WEEK 8"),
+    mutate(big_n, variable_label2 = "WEEK 12"),
+    mutate(big_n, variable_label2 = "WEEK 16"),
+    ard
+  ) |>
+    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+
+  rt_ef_aacr50 |>
+    mutate(
+      group1 = variable_label2,
+      variable_label2 = NULL
+    ) |>
+    mutate(
+      group1_level = if_else(
+        stat_name == "N_header",
+        variable_label1,
+        group1_level,
+        group1_level
+      ),
+      variable_label1 = if_else(
+        stat_name == "N_header",
+        "TOTAL NUMBER OF SUBJECTS",
+        variable_label1,
+        variable_label1
+      ),
+      stat_name = if_else(
+        stat_name == "N_header",
+        "n",
+        stat_name,
+        stat_name
+      ),
+      stat_label = if_else(
+        stat_label == "N",
+        "n",
+        stat_label,
+        stat_label
+      )
+    ) |>
+    bind_rows(
+      tibble(
+        group1 = rep(paste("WEEK", c(2, 4, 8, 12, 16)), each = 2),
+        group1_level = rep(c("DEUC 6 mg", "PBO"), 5),
+        variable_label1 = rep("TOTAL NUMBER OF SUBJECTS", 10),
+        stat_name = rep("p", 10),
+        stat_label = rep("%", 10),
+        stat = rep("100", 10)
+      )
+    ) |>
+    mutate(
+      variable = if_else(
+        is.na(variable_label1),
+        variable_level,
+        variable_label1
+      ),
+      variable_level = if_else(
+        is.na(variable_label1) | variable_level == "(95% CI)",
+        NA,
+        variable_level
+      )
+    ) |>
+    select(-variable_label1) |>
+    relocate(variable, .after = group1_level) |>
+    mutate(
+      variable_level = if_else(
+        variable == "NON RESPONDERS n (%)" & is.na(variable_level),
+        "TOTAL",
+        if_else(
+          variable_level == "(95% CI)",
+          NA,
+          if_else(variable == "RESPONSE RATE (%)", NA, variable_level)
+        )
+      )
+    ) |>
+    cards::as_card()
+}
+
+rt_ef_aacr70 <- function(input = example_data("rt-ef-aacr70.rtf")) {
+
+  temp_rtf <- withr::local_tempfile(fileext = ".rtf")
+
+  input |>
+    read_file() |>
+    artful:::rtf_indentation() |>
+    artful:::rtf_linebreaks() |>
+    write_file(temp_rtf)
+
+  ard_ish <- artful:::rtf_to_html(temp_rtf) |>
+    artful:::html_to_dataframe() |>
+    artful:::manage_exceptions() |>
+    artful:::strip_pagination() |>
+    artful:::strip_indentation() |>
+    artful:::pivot_group()
+
+  ard_ish_parsed <- ard_ish |>
+    dplyr::filter(variable_label1 != "TOTAL NUMBER OF SUBJECTS") |>
+    mutate(stat = if_else(stat == "N.A.", NA, stat)) |>
+    dplyr::filter(!str_detect(stat, "N.E.")) |>
+    mutate(
+      .id = row_number(),
+      stat_list = str_extract_all(stat, "[\\d.]+")
+    ) |>
+    mutate(
+      n_values = lengths(stat_list)
+    ) |>
+    unnest(stat_list) |>
+    mutate(
+      stat_name = case_when(
+        str_detect(variable_level, "n \\(%\\)$") &
+          n_values > 1 &
+          row_number() == 1 ~
+          "n",
+        str_detect(variable_level, "n \\(%\\)$") &
+          n_values > 1 &
+          row_number() == 2 ~
+          "p",
+        str_detect(variable_label1, "n \\(%\\)$") &
+          n_values > 1 &
+          row_number() == 1 ~
+          "n",
+        str_detect(variable_label1, "n \\(%\\)$") &
+          n_values > 1 &
+          row_number() == 2 ~
+          "p",
+        str_detect(variable_level, "\\(95% CI\\)") &
+          n_values > 1 &
+          row_number() == 1 ~
+          "ci_low",
+        str_detect(variable_level, "\\(95% CI\\)") &
+          n_values > 1 &
+          row_number() == 2 ~
+          "ci_high",
+        variable_label1 == "P-VALUE" & !is.na(stat) ~ "p_value",
+        variable_level == "NON RESPONDERS DUE TO MISSING DATA n (%)" &
+          variable_label1 == "RESPONSE RATE (%)" ~
+          "p",
+        variable_label1 == "RESPONDERS n (%)" & stat == "0" ~ "n",
+        .default = NA
+      ),
+      stat = stat_list,
+      .by = .id
+    ) |>
+    mutate(
+      stat_name = case_when(
+        variable_label1 == "DIFFERENCE VS PLACEBO (%)" &
+          !is.na(stat) &
+          is.na(stat_name) ~
+          "p",
+        variable_label1 == "ODDS RATIO VS PLACEBO" &
+          !is.na(stat) &
+          is.na(stat_name) ~
+          "estimate",
+        .default = stat_name
+      ),
+    ) |>
+    select(
+      -c(.id, stat_list, n_values)
+    ) |>
+    left_join(stat_lookup) |>
+    dplyr::filter(!is.na(stat))
+
+  big_n <- ard_ish_parsed |>
+    distinct(group1_level) |>
+    separate_wider_regex(
+      group1_level,
+      patterns = c(
+        variable_label1 = ".*?\\S+",
+        "\\s+",
+        "(?:\\(N = |N = )",
+        stat = "\\d+",
+        "\\)?"
+      )
+    ) |>
+    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+
+  ard <- ard_ish_parsed |>
+    mutate(
+      group1_level = stringr::str_extract(
+        group1_level,
+        ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
+      )
+    )
+
+  rt_ef_aacr70 <- bind_rows(
+    mutate(big_n, variable_label2 = "WEEK 2"),
+    mutate(big_n, variable_label2 = "WEEK 4"),
+    mutate(big_n, variable_label2 = "WEEK 8"),
+    mutate(big_n, variable_label2 = "WEEK 12"),
+    mutate(big_n, variable_label2 = "WEEK 16"),
+    ard
+  ) |>
+    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+
+  rt_ef_aacr70 |>
+    mutate(
+      group1 = variable_label2,
+      variable_label2 = NULL
+    ) |>
+    mutate(
+      group1_level = if_else(
+        stat_name == "N_header",
+        variable_label1,
+        group1_level,
+        group1_level
+      ),
+      variable_label1 = if_else(
+        stat_name == "N_header",
+        "TOTAL NUMBER OF SUBJECTS",
+        variable_label1,
+        variable_label1
+      ),
+      stat_name = if_else(
+        stat_name == "N_header",
+        "n",
+        stat_name,
+        stat_name
+      ),
+      stat_label = if_else(
+        stat_label == "N",
+        "n",
+        stat_label,
+        stat_label
+      )
+    ) |>
+    bind_rows(
+      tibble(
+        group1 = rep(paste("WEEK", c(2, 4, 8, 12, 16)), each = 2),
+        group1_level = rep(c("DEUC 6 mg", "PBO"), 5),
+        variable_label1 = rep("TOTAL NUMBER OF SUBJECTS", 10),
+        stat_name = rep("p", 10),
+        stat_label = rep("%", 10),
+        stat = rep("100", 10)
+      )
+    ) |>
+    mutate(
+      variable = if_else(
+        is.na(variable_label1),
+        variable_level,
+        variable_label1
+      ),
+      variable_level = if_else(
+        is.na(variable_label1) | variable_level == "(95% CI)",
+        NA,
+        variable_level
+      )
+    ) |>
+    select(-variable_label1) |>
+    relocate(variable, .after = group1_level) |>
+    mutate(
+      variable_level = if_else(
+        variable == "NON RESPONDERS n (%)" & is.na(variable_level),
+        "TOTAL",
+        if_else(
+          variable_level == "(95% CI)",
+          NA,
+          if_else(variable == "RESPONSE RATE (%)", NA, variable_level)
+        )
+      )
+    ) |>
+    cards::as_card()
+}
