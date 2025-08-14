@@ -182,25 +182,19 @@ rt_dm_demo <- function(input = example_data("rt-dm-demo.rtf")) {
       group1_level = map(group1_level, ~.x),
       variable_level = map(variable_level, ~ if (is.na(.x)) NULL else .x),
       stat = map(stat, ~ as.numeric(.x)),
-      context = case_when(
-        str_detect(variable, "AGE|WEIGHT|BMI|HEIGHT") ~ "continuous",
-        .default = "categorical"
+      context = if_else(
+        stat_name %in% c("n", "p"),
+        "categorical",
+        "continuous"
       ),
       fmt_fun = map(context, ~ if (.x == "continuous") 1L else 0L),
       warning = map(1:n(), ~NULL),
       error = map(1:n(), ~NULL)
     ) |>
-    filter(
-      !(context == "continuous" & stat_name %in% c("n", "p"))
-    ) |>
     cards::as_card()
 
   return(ard_card)
 }
-
-# Method 1. Use ard "card" dataset to produce the table
-rt_dm_demo() |>
-  gtsummary_table()
 
 # ---- rt-dm-basedz.rtf ----
 rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
@@ -304,6 +298,24 @@ rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
   return(ard_card)
 }
 
+# ---- Create tables -----------------------------------------------------------
+# ---- rt-dm-demo ----
+# Unedited
+rt_dm_demo() |>
+  gtsummary_table()
+
+# Remove geography info
+rt_dm_demo() |>
+  filter(variable != "COUNTRY BY GEOGRAPHIC REGION n(%)") |>
+  gtsummary_table()
+
+# Remove one type of statistic: ERRORS!
+rt_dm_demo() |>
+  filter(stat_name != "p25") |>
+  gtsummary_table()
+
+# ---- rt-dm-basedz() ----
+# Unedited
 rt_dm_basedz() |>
   gtsummary_table()
 
