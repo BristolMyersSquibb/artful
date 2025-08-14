@@ -314,22 +314,22 @@ rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
 # ---- Create tables -----------------------------------------------------------
 # ---- rt-dm-demo ----
 # Unedited
-rt_dm_demo() |>
-  gtsummary_table()
-rt_dm_basedz() |>
-  gtsummary_table()
+# rt_dm_demo() |>
+#   gtsummary_table()
+# rt_dm_basedz() |>
+#   gtsummary_table()
 
 # Remove a variable (here, geography)
-rt_dm_demo() |>
-  filter(variable != "COUNTRY BY GEOGRAPHIC REGION n(%)") |>
-  gtsummary_table()
+# rt_dm_demo() |>
+#   filter(variable != "COUNTRY BY GEOGRAPHIC REGION n(%)") |>
+#   gtsummary_table()
 
 # Change the statistics displayed
-rt_dm_demo() |>
-  gtsummary_table(
-    stats_continuous = "{mean} ({max})",
-    stats_categorical = "{n}"
-  )
+# rt_dm_demo() |>
+#   gtsummary_table(
+#     stats_continuous = "{mean} ({max})",
+#     stats_categorical = "{n}"
+#   )
 
 # ---- Alternate method to bypass ARD ------------------------------------------
 # Recreate the GT tables exactly, bypassing the use of the ARD:
