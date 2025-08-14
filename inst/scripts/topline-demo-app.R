@@ -33,10 +33,20 @@ example_data <- function(...) {
   system.file("extdata", "examples", ..., package = "artful")
 }
 
-gtsummary_table <- function(data) {
+gtsummary_table <- function(
+  data,
+  stats_continuous = "{median} ({p25}, {p75})",
+  stats_categorical = "{n} ({p}%)"
+) {
   data |>
     filter(group1_level != "Total") |>
-    gtsummary::tbl_ard_summary(by = "TRT") |>
+    gtsummary::tbl_ard_summary(
+      by = "TRT",
+      statistic = list(
+        gtsummary::all_continuous() ~ stats_continuous,
+        gtsummary::all_categorical() ~ stats_categorical
+      )
+    ) |>
     gtsummary::add_stat_label() |>
     gtsummary::modify_header(
       gtsummary::all_stat_cols() ~ "**{level}**"
@@ -172,6 +182,8 @@ rt_dm_demo <- function(input = example_data("rt-dm-demo.rtf")) {
     ard_country,
     ard_weight
   ) |>
+    mutate(variable = str_remove_all(variable, "n\\(%\\)")) |>
+    mutate(variable = str_remove_all(variable, "n \\(%\\)")) |>
     mutate(
       variable_level = if_else(
         variable_level %in%
@@ -271,7 +283,8 @@ rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
 
   ard <- ard |>
     rename(variable = variable_label1, variable2_level = variable_label2) |>
-    relocate(variable, .after = group1_level)
+    relocate(variable, .after = group1_level) |>
+    mutate(variable = str_remove_all(variable, "n \\(%\\)"))
 
   ard_card <- ard |>
     mutate(
@@ -301,23 +314,22 @@ rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
 # ---- Create tables -----------------------------------------------------------
 # ---- rt-dm-demo ----
 # Unedited
-# rt_dm_demo() |>
-#   gtsummary_table()
+rt_dm_demo() |>
+  gtsummary_table()
+rt_dm_basedz() |>
+  gtsummary_table()
 
-# Remove geography info
-# rt_dm_demo() |>
-#   filter(variable != "COUNTRY BY GEOGRAPHIC REGION n(%)") |>
-#   gtsummary_table()
+# Remove a variable (here, geography)
+rt_dm_demo() |>
+  filter(variable != "COUNTRY BY GEOGRAPHIC REGION n(%)") |>
+  gtsummary_table()
 
-# Remove one type of statistic: ERRORS!
-# rt_dm_demo() |>
-#   filter(stat_name != "p25") |>
-#   gtsummary_table()
-
-# ---- rt-dm-basedz() ----
-# Unedited
-# rt_dm_basedz() |>
-#   gtsummary_table()
+# Change the statistics displayed
+rt_dm_demo() |>
+  gtsummary_table(
+    stats_continuous = "{mean} ({max})",
+    stats_categorical = "{n}"
+  )
 
 # ---- Alternate method to bypass ARD ------------------------------------------
 # Recreate the GT tables exactly, bypassing the use of the ARD:
@@ -744,7 +756,6 @@ rt_ef_acr20 <- function(input = example_data("rt-ef-acr20.rtf")) {
 }
 
 rt_ef_aacr50 <- function(input = example_data("rt-ef-aacr50.rtf")) {
-
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
@@ -927,7 +938,6 @@ rt_ef_aacr50 <- function(input = example_data("rt-ef-aacr50.rtf")) {
 }
 
 rt_ef_aacr70 <- function(input = example_data("rt-ef-aacr70.rtf")) {
-
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
