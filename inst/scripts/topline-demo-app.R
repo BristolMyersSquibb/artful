@@ -1,5 +1,6 @@
 library(tidyverse)
 library(artful)
+library(gt)
 
 # options(tibble.print_max = Inf)
 
