@@ -726,7 +726,7 @@ rt_ef_acr20 <- function(input = example_data("rt-ef-acr20.rtf")) {
         stat_name
       ),
       stat_label = dplyr::if_else(
-        variable == "ODDS RATIO VS PLACEBO" & is.na(stat_name),
+        variable == "ODDS RATIO VS PLACEBO" & is.na(stat_label),
         "estimate",
         stat_label
       )
@@ -734,12 +734,12 @@ rt_ef_acr20 <- function(input = example_data("rt-ef-acr20.rtf")) {
     dplyr::mutate(
       stat_name = dplyr::if_else(
         is.na(stat_name),
-        dplyr::if_else(as.numeric(stat) %% 1 == 0, "n", "p"),
+        dplyr::if_else(grepl(".", stat, fixed = TRUE), "p", "n"),
         stat_name
       ),
       stat_label = dplyr::if_else(
         is.na(stat_label),
-        dplyr::if_else(as.numeric(stat) %% 1 == 0, "n", "%"),
+        dplyr::if_else(grepl(".", stat, fixed = TRUE), "%", "n"),
         stat_label
       )
     ) |>
