@@ -1,9 +1,6 @@
-library(tidyverse)
-library(artful)
-
 # options(tibble.print_max = Inf)
 
-stat_lookup <- tribble(
+stat_lookup <- tibble::tribble(
   ~stat_name, ~stat_label,
   "n", "n",
   "N", "N",
@@ -40,10 +37,10 @@ rt_dm_demo <- function(input = example_data("rt-dm-demo.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
     artful:::rtf_linebreaks() |>
-    write_file(temp_rtf)
+    readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
     artful:::html_to_dataframe() |>
@@ -53,12 +50,12 @@ rt_dm_demo <- function(input = example_data("rt-dm-demo.rtf")) {
     artful:::pivot_group()
 
   ard_ish_parsed <- ard_ish |>
-    separate_longer_delim(
+    tidyr::separate_longer_delim(
       cols = c(variable_level, stat),
       delim = ", "
     ) |>
-    mutate(
-      stat_name = case_when(
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
         variable_level == "N" ~ "N",
         variable_level == "MEAN" ~ "mean",
         variable_level == "MEDIAN" ~ "median",
@@ -70,33 +67,33 @@ rt_dm_demo <- function(input = example_data("rt-dm-demo.rtf")) {
         .default = NA
       )
     ) |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
-    mutate(
-      stat_name = case_when(
-        n_values > 1 & row_number() == 1 ~ "n",
-        n_values > 1 & row_number() == 2 ~ "p",
+    tidyr::unnest(stat_list) |>
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
+        n_values > 1 & dplyr::row_number() == 1 ~ "n",
+        n_values > 1 & dplyr::row_number() == 2 ~ "p",
         .default = stat_name
       ),
       stat = stat_list,
       .by = .id
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    mutate(stat_name = if_else(is.na(stat_name), "n", stat_name)) |>
+    dplyr::mutate(stat_name = dplyr::if_else(is.na(stat_name), "n", stat_name)) |>
     dplyr::filter(!is.na(stat)) |>
-    left_join(stat_lookup)
+    dplyr::left_join(stat_lookup)
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".*?\\S+",
@@ -106,18 +103,18 @@ rt_dm_demo <- function(input = example_data("rt-dm-demo.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+    dplyr::mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- rt-dm-basedz.rtf ----
@@ -125,9 +122,9 @@ rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
-    write_file(temp_rtf)
+    readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
     artful:::html_to_dataframe() |>
@@ -137,12 +134,12 @@ rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
     artful:::pivot_group()
 
   ard_ish_parsed <- ard_ish |>
-    separate_longer_delim(
+    tidyr::separate_longer_delim(
       cols = c(variable_level, stat),
       delim = ", "
     ) |>
-    mutate(
-      stat_name = case_when(
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
         variable_level == "N" ~ "N",
         variable_level == "MEAN" ~ "mean",
         variable_level == "MEDIAN" ~ "median",
@@ -154,33 +151,33 @@ rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
         .default = NA
       )
     ) |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
-    mutate(
-      stat_name = case_when(
-        n_values > 1 & row_number() == 1 ~ "n",
-        n_values > 1 & row_number() == 2 ~ "p",
+    tidyr::unnest(stat_list) |>
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
+        n_values > 1 & dplyr::row_number() == 1 ~ "n",
+        n_values > 1 & dplyr::row_number() == 2 ~ "p",
         .default = stat_name
       ),
       stat = stat_list,
       .by = .id
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    mutate(stat_name = if_else(is.na(stat_name), "n", stat_name)) |>
+    dplyr::mutate(stat_name = dplyr::if_else(is.na(stat_name), "n", stat_name)) |>
     dplyr::filter(!is.na(stat)) |>
-    left_join(stat_lookup)
+    dplyr::left_join(stat_lookup)
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".+?",
@@ -189,22 +186,22 @@ rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(
+    dplyr::mutate(
       stat_name = "N_header",
       stat_label = "N",
       .before = "stat"
     )
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N=|N=))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- Slide 8 -----------------------------------------------------------------
@@ -214,9 +211,9 @@ rt_ds_pretrt <- function(input = example_data("rt-ds-pretrt.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
-    write_file(temp_rtf)
+    readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
     artful:::html_to_dataframe() |>
@@ -226,32 +223,32 @@ rt_ds_pretrt <- function(input = example_data("rt-ds-pretrt.rtf")) {
     artful:::pivot_group()
 
   ard_ish_parsed <- ard_ish |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
-    mutate(
-      stat_name = case_when(
-        n_values > 1 & row_number() == 1 ~ "n",
-        n_values > 1 & row_number() == 2 ~ "p",
+    tidyr::unnest(stat_list) |>
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
+        n_values > 1 & dplyr::row_number() == 1 ~ "n",
+        n_values > 1 & dplyr::row_number() == 2 ~ "p",
         .default = NA
       ),
       stat = stat_list,
       .by = .id
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
     dplyr::filter(!is.na(stat)) |>
-    left_join(stat_lookup)
+    dplyr::left_join(stat_lookup)
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".*?\\S+",
@@ -261,18 +258,18 @@ rt_ds_pretrt <- function(input = example_data("rt-ds-pretrt.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+    dplyr::mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- rt-ds-trtwk16.rtf ----
@@ -280,9 +277,9 @@ rt_ds_trtwk16 <- function(input = example_data("rt-ds-trtwk16.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
-    write_file(temp_rtf)
+    readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
     artful:::html_to_dataframe() |>
@@ -292,33 +289,33 @@ rt_ds_trtwk16 <- function(input = example_data("rt-ds-trtwk16.rtf")) {
     artful:::pivot_group()
 
   ard_ish_parsed <- ard_ish |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
-    mutate(
-      stat_name = case_when(
-        n_values > 1 & row_number() == 1 ~ "n",
-        n_values > 1 & row_number() == 2 ~ "p",
+    tidyr::unnest(stat_list) |>
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
+        n_values > 1 & dplyr::row_number() == 1 ~ "n",
+        n_values > 1 & dplyr::row_number() == 2 ~ "p",
         .default = NA
       ),
       stat = stat_list,
       .by = .id
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    mutate(stat_name = if_else(is.na(stat_name), "n", stat_name)) |>
+    dplyr::mutate(stat_name = dplyr::if_else(is.na(stat_name), "n", stat_name)) |>
     dplyr::filter(!is.na(stat)) |>
-    left_join(stat_lookup)
+    dplyr::left_join(stat_lookup)
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".*?\\S+",
@@ -328,18 +325,18 @@ rt_ds_trtwk16 <- function(input = example_data("rt-ds-trtwk16.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+    dplyr::mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- Slide 9 -----------------------------------------------------------------
@@ -349,10 +346,10 @@ rt_ef_acr20 <- function(input = example_data("rt-ef-acr20.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
     artful:::rtf_linebreaks() |>
-    write_file(temp_rtf)
+    readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
     artful:::html_to_dataframe() |>
@@ -362,33 +359,33 @@ rt_ef_acr20 <- function(input = example_data("rt-ef-acr20.rtf")) {
     artful:::pivot_group()
 
   ard_ish_parsed <- ard_ish |>
-    slice(-1:-2) |>
-    mutate(stat = if_else(stat == "N.A.", NA, stat)) |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::slice(-1:-2) |>
+    dplyr::mutate(stat = dplyr::if_else(stat == "N.A.", NA, stat)) |>
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
-    mutate(
-      stat_name = case_when(
-        str_detect(variable_level, "n \\(%\\)$") &
+    tidyr::unnest(stat_list) |>
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
+        stringr::str_detect(variable_level, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "n",
-        str_detect(variable_level, "n \\(%\\)$") &
+        stringr::str_detect(variable_level, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "p",
-        str_detect(variable_level, "\\(95% CI\\)") &
+        stringr::str_detect(variable_level, "\\(95% CI\\)") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "ci_low",
-        str_detect(variable_level, "\\(95% CI\\)") &
+        stringr::str_detect(variable_level, "\\(95% CI\\)") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "ci_high",
         variable_level == "P-VALUE" ~ "p_value",
         .default = NA
@@ -396,15 +393,15 @@ rt_ef_acr20 <- function(input = example_data("rt-ef-acr20.rtf")) {
       stat = stat_list,
       .by = .id
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
     dplyr::filter(!is.na(stat)) |>
-    left_join(stat_lookup)
+    dplyr::left_join(stat_lookup)
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".*?\\S+",
@@ -414,18 +411,18 @@ rt_ef_acr20 <- function(input = example_data("rt-ef-acr20.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+    dplyr::mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- rt-ef-aacr50.rtf ----
@@ -433,10 +430,10 @@ rt_ef_aacr50 <- function(input = example_data("rt-ef-aacr50.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
     artful:::rtf_linebreaks() |>
-    write_file(temp_rtf)
+    readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
     artful:::html_to_dataframe() |>
@@ -447,40 +444,40 @@ rt_ef_aacr50 <- function(input = example_data("rt-ef-aacr50.rtf")) {
 
   ard_ish_parsed <- ard_ish |>
     dplyr::filter(variable_label1 != "TOTAL NUMBER OF SUBJECTS") |>
-    mutate(stat = if_else(stat == "N.A.", NA, stat)) |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::mutate(stat = dplyr::if_else(stat == "N.A.", NA, stat)) |>
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
-    mutate(
-      stat_name = case_when(
-        str_detect(variable_level, "n \\(%\\)$") &
+    tidyr::unnest(stat_list) |>
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
+        stringr::str_detect(variable_level, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "n",
-        str_detect(variable_level, "n \\(%\\)$") &
+        stringr::str_detect(variable_level, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "p",
-        str_detect(variable_label1, "n \\(%\\)$") &
+        stringr::str_detect(variable_label1, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "n",
-        str_detect(variable_label1, "n \\(%\\)$") &
+        stringr::str_detect(variable_label1, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "p",
-        str_detect(variable_level, "\\(95% CI\\)") &
+        stringr::str_detect(variable_level, "\\(95% CI\\)") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "ci_low",
-        str_detect(variable_level, "\\(95% CI\\)") &
+        stringr::str_detect(variable_level, "\\(95% CI\\)") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "ci_high",
         variable_label1 == "P-VALUE" & !is.na(stat) ~ "p_value",
         variable_level == "NON RESPONDERS DUE TO MISSING DATA n (%)" &
@@ -491,8 +488,8 @@ rt_ef_aacr50 <- function(input = example_data("rt-ef-aacr50.rtf")) {
       stat = stat_list,
       .by = .id
     ) |>
-    mutate(
-      stat_name = case_when(
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
         variable_label1 == "DIFFERENCE VS PLACEBO (%)" &
           !is.na(stat) &
           is.na(stat_name) ~
@@ -504,15 +501,15 @@ rt_ef_aacr50 <- function(input = example_data("rt-ef-aacr50.rtf")) {
         .default = stat_name
       ),
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    left_join(stat_lookup) |>
+    dplyr::left_join(stat_lookup) |>
     dplyr::filter(!is.na(stat))
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".*?\\S+",
@@ -522,18 +519,18 @@ rt_ef_aacr50 <- function(input = example_data("rt-ef-aacr50.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+    dplyr::mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- rt-ef-aacr70.rtf ----
@@ -541,10 +538,10 @@ rt_ef_aacr70 <- function(input = example_data("rt-ef-aacr70.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
     artful:::rtf_linebreaks() |>
-    write_file(temp_rtf)
+    readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
     artful:::html_to_dataframe() |>
@@ -555,41 +552,41 @@ rt_ef_aacr70 <- function(input = example_data("rt-ef-aacr70.rtf")) {
 
   ard_ish_parsed <- ard_ish |>
     dplyr::filter(variable_label1 != "TOTAL NUMBER OF SUBJECTS") |>
-    mutate(stat = if_else(stat == "N.A.", NA, stat)) |>
-    dplyr::filter(!str_detect(stat, "N.E.")) |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::mutate(stat = dplyr::if_else(stat == "N.A.", NA, stat)) |>
+    dplyr::filter(!stringr::str_detect(stat, "N.E.")) |>
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
-    mutate(
-      stat_name = case_when(
-        str_detect(variable_level, "n \\(%\\)$") &
+    tidyr::unnest(stat_list) |>
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
+        stringr::str_detect(variable_level, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "n",
-        str_detect(variable_level, "n \\(%\\)$") &
+        stringr::str_detect(variable_level, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "p",
-        str_detect(variable_label1, "n \\(%\\)$") &
+        stringr::str_detect(variable_label1, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "n",
-        str_detect(variable_label1, "n \\(%\\)$") &
+        stringr::str_detect(variable_label1, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "p",
-        str_detect(variable_level, "\\(95% CI\\)") &
+        stringr::str_detect(variable_level, "\\(95% CI\\)") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "ci_low",
-        str_detect(variable_level, "\\(95% CI\\)") &
+        stringr::str_detect(variable_level, "\\(95% CI\\)") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "ci_high",
         variable_label1 == "P-VALUE" & !is.na(stat) ~ "p_value",
         variable_level == "NON RESPONDERS DUE TO MISSING DATA n (%)" &
@@ -601,8 +598,8 @@ rt_ef_aacr70 <- function(input = example_data("rt-ef-aacr70.rtf")) {
       stat = stat_list,
       .by = .id
     ) |>
-    mutate(
-      stat_name = case_when(
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
         variable_label1 == "DIFFERENCE VS PLACEBO (%)" &
           !is.na(stat) &
           is.na(stat_name) ~
@@ -614,15 +611,15 @@ rt_ef_aacr70 <- function(input = example_data("rt-ef-aacr70.rtf")) {
         .default = stat_name
       ),
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    left_join(stat_lookup) |>
+    dplyr::left_join(stat_lookup) |>
     dplyr::filter(!is.na(stat))
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".*?\\S+",
@@ -632,18 +629,18 @@ rt_ef_aacr70 <- function(input = example_data("rt-ef-aacr70.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+    dplyr::mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- Slide 10 ----------------------------------------------------------------
@@ -653,10 +650,10 @@ rt_ef_pasi <- function(input = example_data("rt-ef-pasi.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
     artful:::rtf_linebreaks() |>
-    write_file(temp_rtf)
+    readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
     artful:::html_to_dataframe() |>
@@ -666,40 +663,40 @@ rt_ef_pasi <- function(input = example_data("rt-ef-pasi.rtf")) {
     artful:::pivot_group()
 
   ard_ish_parsed <- ard_ish |>
-    mutate(stat = if_else(stat == "N.A.", NA, stat)) |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::mutate(stat = dplyr::if_else(stat == "N.A.", NA, stat)) |>
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
-    mutate(
-      stat_name = case_when(
-        str_detect(variable_level, "n \\(%\\)$") &
+    tidyr::unnest(stat_list) |>
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
+        stringr::str_detect(variable_level, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "n",
-        str_detect(variable_level, "n \\(%\\)$") &
+        stringr::str_detect(variable_level, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "p",
-        str_detect(variable_label1, "n \\(%\\)$") &
+        stringr::str_detect(variable_label1, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "n",
-        str_detect(variable_label1, "n \\(%\\)$") &
+        stringr::str_detect(variable_label1, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "p",
-        str_detect(variable_level, "\\(95% CI\\)") &
+        stringr::str_detect(variable_level, "\\(95% CI\\)") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "ci_low",
-        str_detect(variable_level, "\\(95% CI\\)") &
+        stringr::str_detect(variable_level, "\\(95% CI\\)") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "ci_high",
         variable_level == "TOTAL NUMBER OF SUBJECTS" ~ "n",
         variable_label1 == "RESPONSE RATE (%)" ~ "p",
@@ -714,18 +711,18 @@ rt_ef_pasi <- function(input = example_data("rt-ef-pasi.rtf")) {
       stat = stat_list,
       .by = .id
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    left_join(stat_lookup) |>
+    dplyr::left_join(stat_lookup) |>
     dplyr::filter(!is.na(stat)) |>
-    mutate(
-      stat_name = if_else(
+    dplyr::mutate(
+      stat_name = dplyr::if_else(
         is.na(variable_level) & variable_label1 == "ODDS RATIO VS PLACEBO",
         "odds_ratio",
         stat_name
       ),
-      stat_label = if_else(
+      stat_label = dplyr::if_else(
         is.na(variable_level) & variable_label1 == "ODDS RATIO VS PLACEBO",
         "Odds Ratio",
         stat_label
@@ -733,8 +730,8 @@ rt_ef_pasi <- function(input = example_data("rt-ef-pasi.rtf")) {
     )
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".*?\\S+",
@@ -744,18 +741,18 @@ rt_ef_pasi <- function(input = example_data("rt-ef-pasi.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+    dplyr::mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- rt-ef-enth ----
@@ -763,10 +760,10 @@ rt_ef_enth <- function(input = example_data("rt-ef-enth.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
     artful:::rtf_linebreaks() |>
-    write_file(temp_rtf)
+    readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
     artful:::html_to_dataframe() |>
@@ -776,40 +773,40 @@ rt_ef_enth <- function(input = example_data("rt-ef-enth.rtf")) {
     artful:::pivot_group()
 
   ard_ish_parsed <- ard_ish |>
-    mutate(stat = if_else(stat == "N.A.", NA, stat)) |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::mutate(stat = dplyr::if_else(stat == "N.A.", NA, stat)) |>
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
-    mutate(
-      stat_name = case_when(
-        str_detect(variable_level, "n \\(%\\)$") &
+    tidyr::unnest(stat_list) |>
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
+        stringr::str_detect(variable_level, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "n",
-        str_detect(variable_level, "n \\(%\\)$") &
+        stringr::str_detect(variable_level, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "p",
-        str_detect(variable_label1, "n \\(%\\)$") &
+        stringr::str_detect(variable_label1, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "n",
-        str_detect(variable_label1, "n \\(%\\)$") &
+        stringr::str_detect(variable_label1, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "p",
-        str_detect(variable_level, "\\(95% CI\\)") &
+        stringr::str_detect(variable_level, "\\(95% CI\\)") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "ci_low",
-        str_detect(variable_level, "\\(95% CI\\)") &
+        stringr::str_detect(variable_level, "\\(95% CI\\)") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "ci_high",
         variable_level == "TOTAL NUMBER OF SUBJECTS" ~ "n",
         variable_label1 == "RESPONSE RATE (%)" ~ "p",
@@ -824,18 +821,18 @@ rt_ef_enth <- function(input = example_data("rt-ef-enth.rtf")) {
       stat = stat_list,
       .by = .id
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    left_join(stat_lookup) |>
+    dplyr::left_join(stat_lookup) |>
     dplyr::filter(!is.na(stat)) |>
-    mutate(
-      stat_name = if_else(
+    dplyr::mutate(
+      stat_name = dplyr::if_else(
         is.na(variable_level) & variable_label1 == "ODDS RATIO VS PLACEBO",
         "odds_ratio",
         stat_name
       ),
-      stat_label = if_else(
+      stat_label = dplyr::if_else(
         is.na(variable_level) & variable_label1 == "ODDS RATIO VS PLACEBO",
         "Odds Ratio",
         stat_label
@@ -843,8 +840,8 @@ rt_ef_enth <- function(input = example_data("rt-ef-enth.rtf")) {
     )
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".*?\\S+",
@@ -854,18 +851,18 @@ rt_ef_enth <- function(input = example_data("rt-ef-enth.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+    dplyr::mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- rt-ef-dact ----
@@ -873,10 +870,10 @@ rt_ef_dact <- function(input = example_data("rt-ef-dact.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
     artful:::rtf_linebreaks() |>
-    write_file(temp_rtf)
+    readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
     artful:::html_to_dataframe() |>
@@ -886,40 +883,40 @@ rt_ef_dact <- function(input = example_data("rt-ef-dact.rtf")) {
     artful:::pivot_group()
 
   ard_ish_parsed <- ard_ish |>
-    mutate(stat = if_else(stat == "N.A.", NA, stat)) |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::mutate(stat = dplyr::if_else(stat == "N.A.", NA, stat)) |>
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
-    mutate(
-      stat_name = case_when(
-        str_detect(variable_level, "n \\(%\\)$") &
+    tidyr::unnest(stat_list) |>
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
+        stringr::str_detect(variable_level, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "n",
-        str_detect(variable_level, "n \\(%\\)$") &
+        stringr::str_detect(variable_level, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "p",
-        str_detect(variable_label1, "n \\(%\\)$") &
+        stringr::str_detect(variable_label1, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "n",
-        str_detect(variable_label1, "n \\(%\\)$") &
+        stringr::str_detect(variable_label1, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "p",
-        str_detect(variable_level, "\\(95% CI\\)") &
+        stringr::str_detect(variable_level, "\\(95% CI\\)") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "ci_low",
-        str_detect(variable_level, "\\(95% CI\\)") &
+        stringr::str_detect(variable_level, "\\(95% CI\\)") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "ci_high",
         variable_level == "TOTAL NUMBER OF SUBJECTS" ~ "n",
         variable_label1 == "RESPONSE RATE (%)" ~ "p",
@@ -934,18 +931,18 @@ rt_ef_dact <- function(input = example_data("rt-ef-dact.rtf")) {
       stat = stat_list,
       .by = .id
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    left_join(stat_lookup) |>
+    dplyr::left_join(stat_lookup) |>
     dplyr::filter(!is.na(stat)) |>
-    mutate(
-      stat_name = if_else(
+    dplyr::mutate(
+      stat_name = dplyr::if_else(
         is.na(variable_level) & variable_label1 == "ODDS RATIO VS PLACEBO",
         "odds_ratio",
         stat_name
       ),
-      stat_label = if_else(
+      stat_label = dplyr::if_else(
         is.na(variable_level) & variable_label1 == "ODDS RATIO VS PLACEBO",
         "Odds Ratio",
         stat_label
@@ -953,8 +950,8 @@ rt_ef_dact <- function(input = example_data("rt-ef-dact.rtf")) {
     )
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".*?\\S+",
@@ -964,18 +961,18 @@ rt_ef_dact <- function(input = example_data("rt-ef-dact.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+    dplyr::mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- Slide 11 ----------------------------------------------------------------
@@ -985,10 +982,10 @@ rt_ef_mda <- function(input = example_data("rt-ef-mda.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
     artful:::rtf_linebreaks() |>
-    write_file(temp_rtf)
+    readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
     artful:::html_to_dataframe() |>
@@ -998,40 +995,40 @@ rt_ef_mda <- function(input = example_data("rt-ef-mda.rtf")) {
     artful:::pivot_group()
 
   ard_ish_parsed <- ard_ish |>
-    mutate(stat = if_else(stat == "N.A.", NA, stat)) |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::mutate(stat = dplyr::if_else(stat == "N.A.", NA, stat)) |>
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
-    mutate(
-      stat_name = case_when(
-        str_detect(variable_level, "n \\(%\\)$") &
+    tidyr::unnest(stat_list) |>
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
+        stringr::str_detect(variable_level, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "n",
-        str_detect(variable_level, "n \\(%\\)$") &
+        stringr::str_detect(variable_level, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "p",
-        str_detect(variable_label1, "n \\(%\\)$") &
+        stringr::str_detect(variable_label1, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "n",
-        str_detect(variable_label1, "n \\(%\\)$") &
+        stringr::str_detect(variable_label1, "n \\(%\\)$") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "p",
-        str_detect(variable_level, "\\(95% CI\\)") &
+        stringr::str_detect(variable_level, "\\(95% CI\\)") &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "ci_low",
-        str_detect(variable_level, "\\(95% CI\\)") &
+        stringr::str_detect(variable_level, "\\(95% CI\\)") &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "ci_high",
         variable_level == "TOTAL NUMBER OF SUBJECTS" ~ "n",
         variable_label1 == "RESPONSE RATE (%)" ~ "p",
@@ -1046,18 +1043,18 @@ rt_ef_mda <- function(input = example_data("rt-ef-mda.rtf")) {
       stat = stat_list,
       .by = .id
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    left_join(stat_lookup) |>
+    dplyr::left_join(stat_lookup) |>
     dplyr::filter(!is.na(stat)) |>
-    mutate(
-      stat_name = if_else(
+    dplyr::mutate(
+      stat_name = dplyr::if_else(
         is.na(variable_level) & variable_label1 == "ODDS RATIO VS PLACEBO",
         "odds_ratio",
         stat_name
       ),
-      stat_label = if_else(
+      stat_label = dplyr::if_else(
         is.na(variable_level) & variable_label1 == "ODDS RATIO VS PLACEBO",
         "Odds Ratio",
         stat_label
@@ -1065,8 +1062,8 @@ rt_ef_mda <- function(input = example_data("rt-ef-mda.rtf")) {
     )
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".*?\\S+",
@@ -1076,18 +1073,18 @@ rt_ef_mda <- function(input = example_data("rt-ef-mda.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+    dplyr::mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- rt-ef-cfbdas ----
@@ -1095,10 +1092,10 @@ rt_ef_cfbdas <- function(input = example_data("rt-ef-cfbdas.rtf")) {
   temp_rt <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
     artful:::rtf_linebreaks() |>
-    write_file(temp_rt)
+    readr::write_file(temp_rt)
 
   ard_ish <- artful:::rtf_to_html(temp_rt) |>
     artful:::html_to_dataframe() |>
@@ -1108,65 +1105,65 @@ rt_ef_cfbdas <- function(input = example_data("rt-ef-cfbdas.rtf")) {
     artful:::pivot_group()
 
   ard_ish_parsed <- ard_ish |>
-    mutate(stat = if_else(stat == "N.A.", NA, stat)) |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::mutate(stat = dplyr::if_else(stat == "N.A.", NA, stat)) |>
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
+    tidyr::unnest(stat_list) |>
     dplyr::filter(!is.na(stat)) |>
-    mutate(
-      stat_name = case_when(
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
         variable_level == "MEAN (SD)" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "mean",
         variable_level == "MEAN (SD)" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "sd",
         variable_level == "MIN, MAX" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "min",
         variable_level == "MIN, MAX" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "max",
         variable_level == "ADJUSTED MEAN DIFFERENCE (SE)" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "mean",
         variable_level == "ADJUSTED MEAN DIFFERENCE (SE)" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "se",
         variable_label1 == "ADJUSTED MEAN CHANGES(SE)" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "mean",
         variable_label1 == "ADJUSTED MEAN CHANGES(SE)" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "se",
         variable_level == "95% CONFIDENCE INTERVAL FOR DIFFERENCE" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "ci_low",
         variable_level == "95% CONFIDENCE INTERVAL FOR DIFFERENCE" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "ci_high",
         variable_label1 == "95% CONFIDENCE INTERVAL FOR MEAN" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "ci_low",
         variable_label1 == "95% CONFIDENCE INTERVAL FOR MEAN" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "ci_high",
         variable_level == "N1" ~ "n",
         variable_level == "MEDIAN" ~ "median",
@@ -1175,14 +1172,14 @@ rt_ef_cfbdas <- function(input = example_data("rt-ef-cfbdas.rtf")) {
       stat = stat_list,
       .by = .id
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    left_join(stat_lookup)
+    dplyr::left_join(stat_lookup)
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".*?\\S+",
@@ -1192,18 +1189,18 @@ rt_ef_cfbdas <- function(input = example_data("rt-ef-cfbdas.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+    dplyr::mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- Slide 12 ----------------------------------------------------------------
@@ -1213,10 +1210,10 @@ rt_ef_cfbsvdh <- function(input = example_data("rt-ef-cfbsvdh.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
     artful:::rtf_linebreaks() |>
-    write_file(temp_rtf)
+    readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
     artful:::html_to_dataframe() |>
@@ -1226,65 +1223,65 @@ rt_ef_cfbsvdh <- function(input = example_data("rt-ef-cfbsvdh.rtf")) {
     artful:::pivot_group()
 
   ard_ish_parsed <- ard_ish |>
-    mutate(stat = if_else(stat == "N.A.", NA, stat)) |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::mutate(stat = dplyr::if_else(stat == "N.A.", NA, stat)) |>
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
+    tidyr::unnest(stat_list) |>
     dplyr::filter(!is.na(stat)) |>
-    mutate(
-      stat_name = case_when(
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
         variable_level == "MEAN (SD)" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "mean",
         variable_level == "MEAN (SD)" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "sd",
         variable_level == "MIN, MAX" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "min",
         variable_level == "MIN, MAX" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "max",
         variable_level == "ADJUSTED MEAN DIFFERENCE (SE)" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "mean",
         variable_level == "ADJUSTED MEAN DIFFERENCE (SE)" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "se",
         variable_label1 == "ADJUSTED MEAN CHANGES(SE)" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "mean",
         variable_label1 == "ADJUSTED MEAN CHANGES(SE)" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "se",
         variable_level == "95% CONFIDENCE INTERVAL FOR DIFFERENCE" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "ci_low",
         variable_level == "95% CONFIDENCE INTERVAL FOR DIFFERENCE" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "ci_high",
         variable_label1 == "95% CONFIDENCE INTERVAL FOR MEAN" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "ci_low",
         variable_label1 == "95% CONFIDENCE INTERVAL FOR MEAN" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "ci_high",
         variable_level == "N1" ~ "n",
         variable_level == "MEDIAN" ~ "median",
@@ -1293,14 +1290,14 @@ rt_ef_cfbsvdh <- function(input = example_data("rt-ef-cfbsvdh.rtf")) {
       stat = stat_list,
       .by = .id
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    left_join(stat_lookup)
+    dplyr::left_join(stat_lookup)
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".*?\\S+",
@@ -1310,18 +1307,18 @@ rt_ef_cfbsvdh <- function(input = example_data("rt-ef-cfbsvdh.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+    dplyr::mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- Slide 13 ----------------------------------------------------------------
@@ -1331,10 +1328,10 @@ rt_ef_cfbhaq <- function(input = example_data("rt-ef-cfbhaq.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
     artful:::rtf_linebreaks() |>
-    write_file(temp_rtf)
+    readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
     artful:::html_to_dataframe() |>
@@ -1344,65 +1341,65 @@ rt_ef_cfbhaq <- function(input = example_data("rt-ef-cfbhaq.rtf")) {
     artful:::pivot_group()
 
   ard_ish_parsed <- ard_ish |>
-    mutate(stat = if_else(stat == "N.A.", NA, stat)) |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::mutate(stat = dplyr::if_else(stat == "N.A.", NA, stat)) |>
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
+    tidyr::unnest(stat_list) |>
     dplyr::filter(!is.na(stat)) |>
-    mutate(
-      stat_name = case_when(
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
         variable_level == "MEAN (SD)" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "mean",
         variable_level == "MEAN (SD)" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "sd",
         variable_level == "MIN, MAX" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "min",
         variable_level == "MIN, MAX" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "max",
         variable_level == "ADJUSTED MEAN DIFFERENCE (SE)" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "mean",
         variable_level == "ADJUSTED MEAN DIFFERENCE (SE)" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "se",
         variable_label1 == "ADJUSTED MEAN CHANGES(SE)" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "mean",
         variable_label1 == "ADJUSTED MEAN CHANGES(SE)" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "se",
         variable_level == "95% CONFIDENCE INTERVAL FOR DIFFERENCE" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "ci_low",
         variable_level == "95% CONFIDENCE INTERVAL FOR DIFFERENCE" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "ci_high",
         variable_label1 == "95% CONFIDENCE INTERVAL FOR MEAN" &
           n_values == 2 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "ci_low",
         variable_label1 == "95% CONFIDENCE INTERVAL FOR MEAN" &
           n_values == 2 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "ci_high",
         variable_level == "N1" ~ "n",
         variable_level == "MEDIAN" ~ "median",
@@ -1411,14 +1408,14 @@ rt_ef_cfbhaq <- function(input = example_data("rt-ef-cfbhaq.rtf")) {
       stat = stat_list,
       .by = .id
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    left_join(stat_lookup)
+    dplyr::left_join(stat_lookup)
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".*?\\S+",
@@ -1428,18 +1425,18 @@ rt_ef_cfbhaq <- function(input = example_data("rt-ef-cfbhaq.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+    dplyr::mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- rt-ef-cfbsf36 ----
@@ -1455,10 +1452,10 @@ rt_ae_ae1 <- function(input = example_data("rt-ae-ae1.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
     artful:::rtf_linebreaks() |>
-    write_file(temp_rtf)
+    readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
     artful:::html_to_dataframe() |>
@@ -1468,37 +1465,37 @@ rt_ae_ae1 <- function(input = example_data("rt-ae-ae1.rtf")) {
     artful:::pivot_group()
 
   ard_ish_parsed <- ard_ish |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
-    mutate(
-      stat_name = case_when(
+    tidyr::unnest(stat_list) |>
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
         variable_level != "DEATHs" &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "n",
         variable_level != "DEATHs" &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "p",
         .default = "n"
       ),
       stat = stat_list,
       .by = .id
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    left_join(stat_lookup)
+    dplyr::left_join(stat_lookup)
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".*?\\S+",
@@ -1508,18 +1505,18 @@ rt_ae_ae1 <- function(input = example_data("rt-ae-ae1.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+    dplyr::mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- Slide 15 ----------------------------------------------------------------
@@ -1529,10 +1526,10 @@ rt_ae_aesoc1 <- function(input = example_data("rt-ae-aesoc1.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
     artful:::rtf_linebreaks() |>
-    write_file(temp_rtf)
+    readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
     artful:::html_to_dataframe() |>
@@ -1542,37 +1539,37 @@ rt_ae_aesoc1 <- function(input = example_data("rt-ae-aesoc1.rtf")) {
     artful:::pivot_group()
 
   ard_ish_parsed <- ard_ish |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
-    mutate(
-      stat_name = case_when(
+    tidyr::unnest(stat_list) |>
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
         stat != "0" &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "n",
         variable_level != "DEATHs" &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "p",
         .default = "n"
       ),
       stat = stat_list,
       .by = .id
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    left_join(stat_lookup)
+    dplyr::left_join(stat_lookup)
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".*?\\S+",
@@ -1582,18 +1579,18 @@ rt_ae_aesoc1 <- function(input = example_data("rt-ae-aesoc1.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+    dplyr::mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- Slide 16 & 17 -----------------------------------------------------------
@@ -1603,10 +1600,10 @@ rt_ae_saesoc1 <- function(input = example_data("rt-ae-saesoc1.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
     artful:::rtf_linebreaks() |>
-    write_file(temp_rtf)
+    readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
     artful:::html_to_dataframe() |>
@@ -1616,51 +1613,51 @@ rt_ae_saesoc1 <- function(input = example_data("rt-ae-saesoc1.rtf")) {
     artful:::pivot_group()
 
   ard_ish_parsed <- ard_ish |>
-    mutate(stat = if_else(stat == "N.A.", NA, stat)) |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::mutate(stat = dplyr::if_else(stat == "N.A.", NA, stat)) |>
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
+    tidyr::unnest(stat_list) |>
     dplyr::filter(!is.na(stat)) |>
-    mutate(
-      stat_name = case_when(
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
         variable_level == "RATE DIFFERENCE VS PLACEBO (95% CI)" &
           n_values == 3 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "estimate",
         variable_level == "RATE DIFFERENCE VS PLACEBO (95% CI)" &
           n_values == 3 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "ci_low",
         variable_level == "RATE DIFFERENCE VS PLACEBO (95% CI)" &
           n_values == 3 &
-          row_number() == 3 ~
+          dplyr::row_number() == 3 ~
           "ci_high",
         stat != "0" &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "n",
         variable_level != "DEATHs" &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "p",
         .default = "n"
       ),
       stat = stat_list,
       .by = .id
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    left_join(stat_lookup)
+    dplyr::left_join(stat_lookup)
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".*?\\S+",
@@ -1670,18 +1667,18 @@ rt_ae_saesoc1 <- function(input = example_data("rt-ae-saesoc1.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+    dplyr::mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- Slide 18 ----------------------------------------------------------------
@@ -1695,10 +1692,10 @@ rt_ae_aedissoc1 <- function(input = example_data("rt-ae-aedissoc1.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
   input |>
-    read_file() |>
+    readr::read_file() |>
     artful:::rtf_indentation() |>
     artful:::rtf_linebreaks() |>
-    write_file(temp_rtf)
+    readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
     artful:::html_to_dataframe() |>
@@ -1708,51 +1705,51 @@ rt_ae_aedissoc1 <- function(input = example_data("rt-ae-aedissoc1.rtf")) {
     artful:::pivot_group()
 
   ard_ish_parsed <- ard_ish |>
-    mutate(stat = if_else(stat == "N.A.", NA, stat)) |>
-    mutate(
-      .id = row_number(),
-      stat_list = str_extract_all(stat, "[\\d.]+")
+    dplyr::mutate(stat = dplyr::if_else(stat == "N.A.", NA, stat)) |>
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
     ) |>
-    mutate(
+    dplyr::mutate(
       n_values = lengths(stat_list)
     ) |>
-    unnest(stat_list) |>
+    tidyr::unnest(stat_list) |>
     dplyr::filter(!is.na(stat)) |>
-    mutate(
-      stat_name = case_when(
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
         variable_level == "RATE DIFFERENCE VS PLACEBO (95% CI)" &
           n_values == 3 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "estimate",
         variable_level == "RATE DIFFERENCE VS PLACEBO (95% CI)" &
           n_values == 3 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "ci_low",
         variable_level == "RATE DIFFERENCE VS PLACEBO (95% CI)" &
           n_values == 3 &
-          row_number() == 3 ~
+          dplyr::row_number() == 3 ~
           "ci_high",
         stat != "0" &
           n_values > 1 &
-          row_number() == 1 ~
+          dplyr::row_number() == 1 ~
           "n",
         variable_level != "DEATHs" &
           n_values > 1 &
-          row_number() == 2 ~
+          dplyr::row_number() == 2 ~
           "p",
         .default = "n"
       ),
       stat = stat_list,
       .by = .id
     ) |>
-    select(
+    dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    left_join(stat_lookup)
+    dplyr::left_join(stat_lookup)
 
   big_n <- ard_ish_parsed |>
-    distinct(group1_level) |>
-    separate_wider_regex(
+    dplyr::distinct(group1_level) |>
+    tidyr::separate_wider_regex(
       group1_level,
       patterns = c(
         variable_label1 = ".*?\\S+",
@@ -1762,18 +1759,18 @@ rt_ae_aedissoc1 <- function(input = example_data("rt-ae-aedissoc1.rtf")) {
         "\\)?"
       )
     ) |>
-    mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
+    dplyr::mutate(stat_name = "N_header", stat_label = "N", .before = "stat")
 
   ard <- ard_ish_parsed |>
-    mutate(
+    dplyr::mutate(
       group1_level = stringr::str_extract(
         group1_level,
         ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
       )
     )
 
-  bind_rows(big_n, ard) |>
-    select(starts_with("group"), starts_with("variable"), starts_with("stat"))
+  dplyr::bind_rows(big_n, ard) |>
+    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
 }
 
 # ---- Slide 20 ----------------------------------------------------------------
