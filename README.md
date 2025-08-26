@@ -1,6 +1,72 @@
 # artful
 a**rtf**ul is an experimental R package to convert RTF tables into R data frames following the [Analysis Results Data (ARD) standard](https://wiki.cdisc.org/pages/viewpage.action?pageId=222298985).
 
+## Installation
+
+```r
+# Install development version from GitHub
+# install.packages("devtools")
+devtools::install_github("BristolMyersSquibb/artful")
+```
+
+## Getting Started
+
+### Quick Example
+
+```r
+library(artful)
+library(dplyr)
+
+# Convert an RTF table to ARD format
+# Note: RTF files containing clinical trial data are not included in the repository
+# due to proprietary data restrictions. You'll need to provide your own RTF files.
+
+# Example usage with an RTF file
+ard_df <- rtf_to_ard(system.file(package = 'artful', 'extdata/examples', 'rt-ae-ae1.rtf'))
+
+# Example output structure:
+# # A tibble: 120 × 7
+#    group1 group1_level        variable variable_level stat_name stat_label stat
+#    <chr>  <chr>               <chr>    <chr>          <chr>     <chr>      <chr>
+#  1 TRT    Placebo             Age      Mean           mean      Mean       65.2
+#  2 TRT    Placebo             Age      SD             sd        SD         8.4
+#  3 TRT    Treatment Arm A     Age      Mean           mean      Mean       63.8
+#  4 TRT    Treatment Arm A     Age      SD             sd        SD         9.1
+# ...
+```
+
+### Data Requirements
+
+The RTF source files in `inst/extdata/` are gitignored as they contain proprietary clinical trial data. To use this package, you need to:
+
+1. Obtain RTF table files from your clinical trial data management system
+2. Ensure RTF files contain properly formatted tables (not just text)
+3. Place them in a local directory accessible to R
+
+The package is designed to handle RTF tables typically exported from SAS or other statistical software used in clinical trials.
+
+### Creating ARD from Scratch
+
+You can also create ARD-formatted data using the [cards](https://insightsengineering.github.io/cards/) package:
+
+```r
+library(cards)
+
+# Example with synthetic clinical trial data
+# Create ARD from raw data
+ard_stack(
+  data = ADSL,
+  ard_categorical(variables = "AGEGR1"),
+  ard_continuous(variables = "AGE"),
+  .by = "ARM",
+  .overall = TRUE,
+  .attributes = TRUE
+)
+
+# The resulting format is compatible with artful's output
+# Both can be used interchangeably in downstream analyses
+```
+
 ## Heuristics
 artful works by first converting RTF tables into HTML tables via [Pandoc](https://pandoc.org/).
 Then, [rvest](https://rvest.tidyverse.org/) is used to extract the HTML table into an R data frame.
@@ -18,7 +84,7 @@ As the RTF tables this package attempts to convert are designed to be human read
 Instead the heuristics described above should continually be updated inline with any changes to the code made to accomodate new RTF tables which did not fit the previous rule set.
 
 ## ARD standard
-ARD is a standardised, machine-readable format specifically designed for encoding statistical analysis summaries derived from clinical trial data. 
+ARD is a standardised, machine-readable format specifically designed for encoding statistical analysis summaries derived from clinical trial data.
 However, the ARD standard is still not concretely defined.
 This means it is open to interpretation and has some scope of flexibility in terms of columns to be included.
 Approximately defined, an ARD data frame should abide to the following criteria:
