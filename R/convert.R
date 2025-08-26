@@ -56,34 +56,6 @@ html_to_dataframe <- function(html) {
     rvest::html_table()
 }
 
-#' Convert an RTF Table into an ARD data frame
-#'
-#' This function converts a table in RTF format into a data frame in R,
-#' following the ARD standard. This is the top-level function of this package
-#' which acts as a glue to the lower-level functions.
-#'
-#' @param file A string, the path to the input .rtf file.
-#'
-#' @return an R data frame following the ARD standard.
-#'
-#' @export
-rtf_to_ard <- function(file) {
-  temp_rtf <- tempfile(fileext = ".rtf")
-
-  file |>
-    readr::read_file() |>
-    rtf_indentation() |>
-    rtf_linebreaks() |>
-    readr::write_file(temp_rtf)
-
-  rtf_to_html(temp_rtf) |>
-    html_to_dataframe() |>
-    manage_exceptions() |>
-    strip_pagination() |>
-    strip_indentation() |>
-    pivot_group()
-}
-
 #' Convert RTF file to PDF
 #'
 #' Converts an RTF file to PDF using LibreOffice's command-line interface.

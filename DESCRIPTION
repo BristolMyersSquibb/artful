@@ -9,14 +9,10 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE, roclets = c("collate", "namespace", "rd",
     "roxyglobals::global_roclet"))
 RoxygenNote: 7.3.2
-Imports: 
-    dplyr,
+Imports:
     pandoc,
-    purrr,
     readr,
-    rvest,
-    stringr,
-    tidyr
+    rvest
 Suggests: 
     roxyglobals,
     testthat (>= 3.0.0),
