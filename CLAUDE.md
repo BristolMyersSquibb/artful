@@ -48,8 +48,8 @@ The main conversion pipeline follows this sequence:
 4. **Parsing**: Apply heuristics to convert to ARD format (`parse.R`)
 
 ### Key Functions
-- `rtf_to_ard()` (convert.R:66): Main entry point that orchestrates the full conversion pipeline
-- `rtf_to_pdf()` (qc.R): Converts RTF files to PDF using LibreOffice for quality control
+- `rtf_to_ard()` (convert.R:70): Main entry point that orchestrates the full conversion pipeline
+- `rtf_to_pdf()` (convert.R:111): Converts RTF files to PDF using LibreOffice for quality control
 - `strip_pagination()` (parse.R:161): Removes headers, footers, and pagination artifacts
 - `strip_indentation()` (parse.R:219): Converts RTF indentation to ARD variable columns
 - `pivot_group()` (parse.R:287): Transforms wide format grouping variables to long format
@@ -58,7 +58,6 @@ The main conversion pipeline follows this sequence:
 - `R/convert.R`: Core RTF→HTML→DataFrame conversion functions
 - `R/parse.R`: Table parsing heuristics and ARD transformation
 - `R/rtf.R`: RTF-specific text processing (indentation, line breaks)
-- `R/qc.R`: Quality control functions (RTF to PDF conversion)
 - `R/utils.R`: Utility functions
 - `inst/extdata/examples/`: Example RTF files for testing
 - `inst/parser-reflections.md`: Technical notes on RTF parsing challenges
