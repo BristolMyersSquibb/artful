@@ -51,3 +51,5 @@ rsconnect/
 
 # Table examples provided by BMS
 inst/extdata/
+
+.DS_Store
