@@ -9,11 +9,7 @@ parse_rtf <- function() {
   }
 
   prompt <- interpolate_file(
-    system.file(
-      "prompts",
-      "prompt.md",
-      package = "artful"
-    ),
+    system.file("prompts", "prompt.md", package = "artful"),
     example_html = rtf_to_html("inst/extdata/ellmer/example_1.rtf"),
     example_pdf = content_pdf_file("inst/extdata/ellmer/example_1.pdf"),
     user_html = rtf_to_html("inst/extdata/ellmer/example_2.rtf"), # Missing
