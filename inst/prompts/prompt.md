@@ -9,7 +9,8 @@ You will be provided with two synchronized inputs representing the same clinical
 {{user_html}}
 </html>
 
-Your task is to parse the table using both the <image> and <html> inputs, and structure the data into a single JSON array of objects. Each object in the array must represent a single statistical result, as per the ARD standard.
+Your task is to parse the table using both the <image> and <html> inputs, and structure the data into a single JSON array of objects.
+Each object in the array must represent a single statistical result, as per the ARD standard.
 
 ## METHODOLOGY
 - Use the IMAGE as the definitive source for the table's visual layout, hierarchy, and relationships between rows and columns
@@ -37,7 +38,9 @@ This means the data frame should include at least the follow columns (with recom
 
 
 ## CRITICAL RULES
-1. **Process All Pages:** You must iterate through every page provided in the image input. Do not stop after finding the first table. Ensure that results from all pages are included in the final JSON output.
+1. **Process All Pages:** You must iterate through every page provided in the image input.
+Do not stop after finding the first table.
+Ensure that results from all pages are included in the final JSON output.
 
 2. **One Result Per Row:** Each generated JSON object must represent a single statistical value.
 
@@ -64,7 +67,8 @@ The values of the other cells in the original row will just repeat across the me
 
 If a statistic is not in this table, create a snake_case name that is logical and makes sense for the context.
 
-5. **Data Integrity:** Only extract data present in the provided inputs. Do not calculate, infer, or hallucinate any values. If a value is missing, represent it as `null`.
+5. **Data Integrity:** Only extract data present in the provided inputs.
+Do not calculate, infer, or hallucinate any values. If a value is missing, represent it as `null`.
 
 ## JSON OUTPUT SCHEMA
 Each object in your JSON array must have exactly these keys:
