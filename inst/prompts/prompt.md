@@ -23,15 +23,6 @@ An ARD data frame should abide to the following criteria:
 
 2. Each row can provide the context to uniquely identify the unique statistical result value.
    For example, a row in an ARD would not just contain a p-value; it would be linked to the specific study, subject group, parameter, and statistical test that generated it.
-   This means the data frame should include at least the follow columns (with recommended column names in brackets):
-
-- group names (`group<N>`)
-- group levels (`group<N>_level`)
-- variable names (`variable`)
-- variable levels (`variable_level`)
-- statistical names (`stat_name`)
-- statistical label (`stat_label`)
-- statistical value (`stat`)
 
 ## METHODOLOGY
 
@@ -95,6 +86,7 @@ Each object in your JSON array must have exactly these keys:
 - `stat_name`: (String) Standardized statistic name from mapping table (e.g., "n", "mean", "p")
 - `stat_label`: (String) Human-readable statistic label as it appears in table (e.g., "Mean", "n", "%")
 - `stat`: (Number or String) The numeric or text value. Represent percentages as numbers (e.g., 15.4 for "15.4%")
+
 
 ## EXAMPLES
 
