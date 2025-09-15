@@ -1,3 +1,6 @@
+# ------------------------------------------------------------------------------
+# HELPERS
+# ------------------------------------------------------------------------------
 # options(tibble.print_max = Inf)
 
 stat_lookup <- tibble::tribble(
@@ -63,9 +66,9 @@ gtsummary_table <- function(
     )
 }
 
-# ---- Slide 7 -----------------------------------------------------------------
-
-# ---- rt-dm-demo.rtf ----
+# ------------------------------------------------------------------------------
+# rt-dm-demo.rtf
+# ------------------------------------------------------------------------------
 rt_dm_demo <- function(input = example_data("rt-dm-demo.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
@@ -213,7 +216,9 @@ rt_dm_demo <- function(input = example_data("rt-dm-demo.rtf")) {
   return(ard_card)
 }
 
-# ---- rt-dm-basedz.rtf ----
+# ------------------------------------------------------------------------------
+# rt-dm-basedz.rtf
+# ------------------------------------------------------------------------------
 rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
@@ -324,6 +329,9 @@ rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
   return(ard_card)
 }
 
+# ------------------------------------------------------------------------------
+# rt-ef-acr20.rtf
+# ------------------------------------------------------------------------------
 rt_ef_acr20 <- function(input = example_data("rt-ef-acr20.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
@@ -496,6 +504,9 @@ rt_ef_acr20 <- function(input = example_data("rt-ef-acr20.rtf")) {
     cards::as_card()
 }
 
+# ------------------------------------------------------------------------------
+# rt-ef-aacr50.rtf
+# ------------------------------------------------------------------------------
 rt_ef_aacr50 <- function(input = example_data("rt-ef-aacr50.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
@@ -682,6 +693,9 @@ rt_ef_aacr50 <- function(input = example_data("rt-ef-aacr50.rtf")) {
     cards::as_card()
 }
 
+# ------------------------------------------------------------------------------
+# rt-ef-aacr70.rtf
+# ------------------------------------------------------------------------------
 rt_ef_aacr70 <- function(input = example_data("rt-ef-aacr70.rtf")) {
   temp_rtf <- withr::local_tempfile(fileext = ".rtf")
 
@@ -869,3 +883,12 @@ rt_ef_aacr70 <- function(input = example_data("rt-ef-aacr70.rtf")) {
     ) |>
     cards::as_card()
 }
+
+# ------------------------------------------------------------------------------
+# ALL FUNS
+# ------------------------------------------------------------------------------
+# rt_dm_demo()
+# rt_dm_basedz()
+# rt_ef_acr20()
+# rt_ef_aacr50()
+# rt_ef_aacr70()
