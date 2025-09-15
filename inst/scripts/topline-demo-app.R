@@ -885,6 +885,185 @@ rt_ef_aacr70 <- function(input = example_data("rt-ef-aacr70.rtf")) {
 }
 
 # ------------------------------------------------------------------------------
+# rt-ae-ae1.rtf | Overall Safety Summary: Weeks 0-16
+# ------------------------------------------------------------------------------
+rt_ae_ae1 <- function(input = example_data("rt-ae-ae1.rtf")) {
+  temp_rtf <- withr::local_tempfile(fileext = ".rtf")
+
+  input |>
+    readr::read_file() |>
+    artful:::rtf_indentation() |>
+    artful:::rtf_linebreaks() |>
+    readr::write_file(temp_rtf)
+
+  ard_ish <- artful:::rtf_to_html(temp_rtf) |>
+    artful:::html_to_dataframe() |>
+    artful:::manage_exceptions() |>
+    artful:::strip_pagination() |>
+    artful:::strip_indentation() |>
+    artful:::pivot_group()
+
+  ard_ish_parsed <- ard_ish |>
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
+    ) |>
+    dplyr::mutate(
+      n_values = lengths(stat_list)
+    ) |>
+    tidyr::unnest(stat_list) |>
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
+        variable_level != "DEATHs" &
+          n_values > 1 &
+          dplyr::row_number() == 1 ~
+          "n",
+        variable_level != "DEATHs" &
+          n_values > 1 &
+          dplyr::row_number() == 2 ~
+          "p",
+        .default = "n"
+      ),
+      stat = stat_list,
+      .by = .id
+    ) |>
+    dplyr::select(
+      -c(.id, stat_list, n_values)
+    ) |>
+    dplyr::left_join(stat_lookup)
+
+  ard <- ard_ish_parsed |>
+    dplyr::mutate(
+      group1_level = stringr::str_extract(
+        group1_level,
+        ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
+      )
+    )
+
+  ard_card <- ard |>
+    dplyr::mutate(
+      group1_level = purrr::map(group1_level, ~.x),
+      variable_level = purrr::map(
+        variable_level,
+        ~ if (is.na(.x)) NULL else .x
+      ),
+      stat = purrr::map(stat, ~ as.numeric(.x)),
+      context = dplyr::if_else(
+        stat_name %in% c("n", "p"),
+        "categorical",
+        "continuous"
+      ),
+      fmt_fun = purrr::map(context, ~ if (.x == "continuous") 1L else 0L),
+      warning = purrr::map(1:dplyr::n(), ~NULL),
+      error = purrr::map(1:dplyr::n(), ~NULL)
+    ) |>
+    cards::as_card()
+
+  return(ard_card)
+}
+
+# ------------------------------------------------------------------------------
+# rt-ae-saesoc1.rtf | Overall Safety Summary: Weeks 0-16
+# ------------------------------------------------------------------------------
+rt_ae_saesoc1 <- function(input = example_data("rt-ae-saesoc1.rtf")) {
+  temp_rtf <- withr::local_tempfile(fileext = ".rtf")
+
+  input |>
+    readr::read_file() |>
+    artful:::rtf_indentation() |>
+    artful:::rtf_linebreaks() |>
+    readr::write_file(temp_rtf)
+
+  ard_ish <- artful:::rtf_to_html(temp_rtf) |>
+    artful:::html_to_dataframe() |>
+    artful:::manage_exceptions() |>
+    artful:::strip_pagination() |>
+    artful:::strip_indentation() |>
+    artful:::pivot_group()
+
+  ard_ish_parsed <- ard_ish |>
+    dplyr::mutate(stat = dplyr::if_else(stat == "N.A.", NA, stat)) |>
+    dplyr::mutate(
+      .id = dplyr::row_number(),
+      stat_list = stringr::str_extract_all(stat, "[\\d.]+")
+    ) |>
+    dplyr::mutate(
+      n_values = lengths(stat_list)
+    ) |>
+    tidyr::unnest(stat_list) |>
+    dplyr::filter(!is.na(stat)) |>
+    dplyr::mutate(
+      stat_name = dplyr::case_when(
+        variable_level == "RATE DIFFERENCE VS PLACEBO (95% CI)" &
+          n_values == 3 &
+          dplyr::row_number() == 1 ~
+          "estimate",
+        variable_level == "RATE DIFFERENCE VS PLACEBO (95% CI)" &
+          n_values == 3 &
+          dplyr::row_number() == 2 ~
+          "ci_low",
+        variable_level == "RATE DIFFERENCE VS PLACEBO (95% CI)" &
+          n_values == 3 &
+          dplyr::row_number() == 3 ~
+          "ci_high",
+        stat != "0" &
+          n_values > 1 &
+          dplyr::row_number() == 1 ~
+          "n",
+        variable_level != "DEATHs" &
+          n_values > 1 &
+          dplyr::row_number() == 2 ~
+          "p",
+        .default = "n"
+      ),
+      stat = stat_list,
+      .by = .id
+    ) |>
+    dplyr::select(
+      -c(.id, stat_list, n_values)
+    ) |>
+    dplyr::left_join(stat_lookup)
+
+  ard <- ard_ish_parsed |>
+    dplyr::mutate(
+      group1_level = stringr::str_extract(
+        group1_level,
+        ".*?\\S+(?=\\s*(?:\\(N = |N = ))"
+      )
+    )
+
+  ard <- ard |>
+    dplyr::rename(variable = variable_label1) |>
+    dplyr::relocate(variable, .after = group1_level) |>
+    dplyr::mutate(variable_level = stringr::str_squish(variable_level))
+
+  ard_card <- ard |>
+    dplyr::mutate(
+      group1_level = purrr::map(group1_level, ~.x),
+      variable_level = purrr::map(
+        variable_level,
+        ~ if (is.na(.x)) NULL else .x
+      ),
+      stat = purrr::map(stat, ~ as.numeric(.x)),
+      context = dplyr::if_else(
+        stat_name %in% c("n", "p"),
+        "categorical",
+        "continuous"
+      ),
+      fmt_fun = purrr::map(context, ~ if (.x == "continuous") 1L else 0L),
+      warning = purrr::map(1:dplyr::n(), ~NULL),
+      error = purrr::map(1:dplyr::n(), ~NULL)
+    ) |>
+    cards::as_card()
+
+  return(ard_card)
+}
+
+# ------------------------------------------------------------------------------
+# ? | AEs of Special Interest Summary Occurring in ≥ 2 Participantsa: Weeks 0-16
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
 # ALL FUNS
 # ------------------------------------------------------------------------------
 # rt_dm_demo()
@@ -892,3 +1071,5 @@ rt_ef_aacr70 <- function(input = example_data("rt-ef-aacr70.rtf")) {
 # rt_ef_acr20()
 # rt_ef_aacr50()
 # rt_ef_aacr70()
+# rt_ae_ae1()
+# rt_ae_saesoc1()
