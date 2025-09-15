@@ -13,12 +13,6 @@ You will be provided with two synchronized inputs representing the same clinical
 Your task is to parse the table using both the <image> and <html> inputs, and structure the data into a single JSON array of objects.
 Each object in the array must represent a single statistical result, as per the ARD standard.
 
-## METHODOLOGY
-
-- Use the IMAGE as the definitive source for the table's visual layout, hierarchy, and relationships between rows and columns
-- Use the HTML code and its tags (`<tr>`, `<td>`, `<th>`, `colspan`, etc.) to confirm structure and ensure accuracy of every character and number you extract
-- Cross-reference both sources to achieve the most accurate parsing possible
-
 ## ARD STANDARD
 
 ARD is a standardised, machine-readable format specifically designed for encoding statistical analysis summaries derived from clinical trial data.
@@ -39,39 +33,55 @@ An ARD data frame should abide to the following criteria:
 - statistical label (`stat_label`)
 - statistical value (`stat`)
 
+## METHODOLOGY
+
+- Use the <image> as the definitive source for the table's visual layout, hierarchy, and relationships between rows and columns.
+- Use the <html> code and its tags (`<tr>`, `<td>`, `<th>`, `colspan`, etc.) to confirm structure and ensure accuracy of every character and number you extract.
+- Cross-reference both sources to achieve the most accurate parsing possible.
+
 ## CRITICAL RULES
 
 1. **Process All Pages:** You must iterate through every page provided in the image input.
    Do not stop after finding the first table.
    Ensure that results from all pages are included in the final JSON output.
 
-2. **One Result Per Row:** Each generated JSON object must represent a single statistical value.
-
-3. **Split Compound Statistics:** If a single stat cell contains multiple values (e.g., "12 (15.4%)" for count and percentage), you MUST generate separate JSON members for each stat.
+2. **Split Compound Statistics:** If a single stat cell contains multiple values (e.g., "12 (15.4%)" for count and percentage), you MUST generate separate JSON members for each stat.
    For example, one for the count (n) with value 12, and one for the percentage (p) with value 15.4.
    The values of the other cells in the original row will just repeat across the members.
 
-4. **Standardize Statistic Names:** You MUST populate the `stat_name` and `stat_label` fields using the standardized names from this mapping table:
+3. **Standardize Statistic Names:** You MUST populate the `stat_name` and `stat_label` fields using the standardized names from this mapping table:
 
-| `stat_name` | `stat_label`        | Description                      |
-| ----------- | ------------------- | -------------------------------- |
-| `n`         | "n" or "Count"      | Count of subjects/records        |
-| `N`         | "N" or "Total N"    | Total number of subjects/records |
-| `p`         | "%" or "Percent"    | Proportion or Percentage         |
-| `pct`       | "%" or "Percent"    | Percentage                       |
-| `mean`      | "Mean"              | Arithmetic mean                  |
-| `sd`        | "SD" or "Std Dev"   | Standard Deviation               |
-| `se`        | "SE" or "Std Err"   | Standard Error of the Mean       |
-| `median`    | "Median"            | Median (50th percentile)         |
-| `p25`       | "Q1" or "25th Pctl" | 25th Percentile                  |
-| `p75`       | "Q3" or "75th Pctl" | 75th Percentile                  |
-| `min`       | "Min" or "Minimum"  | Minimum value                    |
-| `max`       | "Max" or "Maximum"  | Maximum value                    |
+| `stat_name` | `stat_label`        | Description                                                       |
+| :---------- | :------------------ | :---------------------------------------------------------------- |
+| `n`         | "n" or "Count"      | Count of subjects or records in a specific category or group.     |
+| `N`         | "N" or "Total N"    | Total number of subjects in a group, often used as a denominator. |
+| `N_obs`     | "N Observed"        | Number of non-missing observations.                               |
+| `N_miss`    | "N Missing"         | Number of missing observations.                                   |
+| `p`         | "%" or "Percent"    | Proportion (value between 0 and 1).                               |
+| `pct`       | "%" or "Percent"    | Percentage (proportion \* 100).                                   |
+| `mean`      | "Mean"              | Arithmetic mean.                                                  |
+| `sd`        | "SD" or "Std Dev"   | Standard Deviation.                                               |
+| `se`        | "SE" or "Std Err"   | Standard Error of the Mean.                                       |
+| `median`    | "Median"            | Median (50th percentile).                                         |
+| `geom_mean` | "Geometric Mean"    | Geometric mean, often used for log-transformed data.              |
+| `cv`        | "CV (%)"            | Coefficient of Variation.                                         |
+| `min`       | "Min" or "Minimum"  | Minimum value.                                                    |
+| `max`       | "Max" or "Maximum"  | Maximum value.                                                    |
+| `range`     | "Range"             | The range of values (`max` - `min`).                              |
+| `p25`       | "Q1" or "25th Pctl" | 25th Percentile (First Quartile).                                 |
+| `p75`       | "Q3" or "75th Pctl" | 75th Percentile (Third Quartile).                                 |
+| `iqr`       | "IQR"               | Interquartile Range (`p75` - `p25`).                              |
+| `estimate`  | "Estimate"          | Model parameter estimate (e.g., difference in means).             |
+| `conf.low`  | "Lower CL"          | Lower bound of the confidence interval.                           |
+| `conf.high` | "Upper CL"          | Upper bound of the confidence interval.                           |
+| `p.value`   | "p-value"           | The p-value from a statistical test.                              |
+| `statistic` | "Statistic"         | The value of the test statistic (e.g., t-value, F-value).         |
+| `df`        | "df"                | Degrees of Freedom.                                               |
+| `null`      | "Unknown"           | An unknown statistics                                             |
 
-If a statistic is not in this table, create a snake_case name that is logical and makes sense for the context.
-
-5. **Data Integrity:** Only extract data present in the provided inputs.
-   Do not calculate, infer, or hallucinate any values. If a value is missing, represent it as `null`.
+4. **Data Integrity:** Only extract data present in the provided inputs.
+   Do not calculate, infer, or hallucinate any values.
+   If a value is missing, represent it as `null`.
 
 ## JSON OUTPUT SCHEMA
 
@@ -86,7 +96,7 @@ Each object in your JSON array must have exactly these keys:
 - `stat_label`: (String) Human-readable statistic label as it appears in table (e.g., "Mean", "n", "%")
 - `stat`: (Number or String) The numeric or text value. Represent percentages as numbers (e.g., 15.4 for "15.4%")
 
-## Examples
+## EXAMPLES
 
 {{exampl_html}} and {{example_pdf}} should produce the following JSON:
 
@@ -117,7 +127,7 @@ Each object in your JSON array must have exactly these keys:
 
 ## OUTPUT REQUIREMENTS
 
-- Your response must be ONLY a single, valid JSON array
-- Do not include any explanatory text, comments, or markdown formatting
-- Do not use code blocks or any other formatting
-- Start your response with `[` and end with `]`
+- Your response must be ONLY a single, valid JSON array.
+- Do not include any explanatory text, comments, or markdown formatting.
+- Do not use code blocks or any other formatting.
+- Start your response with `[` and end with `]`.
