@@ -87,6 +87,8 @@ Each object in your JSON array must have exactly these keys:
 - `stat_label`: (String) Human-readable statistic label as it appears in table (e.g., "Mean", "n", "%")
 - `stat`: (Number or String) The numeric or text value. Represent percentages as numbers (e.g., 15.4 for "15.4%")
 
+Each object in your JSON array may also have these additional, optional, keys:
+- `variable<N>_level` (String) N additional group levels that capture more context about a single statistic.
 
 ## EXAMPLES
 
