@@ -211,3 +211,52 @@ example_3_ard <- ADLB |>
 # JSON (ARD)
 example_3_ard |>
   jsonlite::toJSON(pretty = TRUE)
+
+# ------------------------------------------------------------------------------
+# Example 4
+# ------------------------------------------------------------------------------
+example_4_tbl <- ADAE |>
+  filter(.by = AETERM, dplyr::n() > 25, TRTEMFL == "Y") |>
+  gtsummary::tbl_hierarchical_count(
+    by = TRTA,
+    variables = c(AEBODSYS, AEDECOD),
+    denominator = ADSL,
+    overall_row = TRUE,
+    digits = ~ list(p = cards::label_round(digits = 1, scale = 100, width = 4)),
+    label = list(
+      ..ard_hierarchical_overall.. = "Total Number of Adverse Events"
+    )
+  ) |>
+  gtsummary::modify_column_alignment(
+    columns = gtsummary::all_stat_cols(),
+    "right"
+  )
+
+# PDF
+example_4_tbl |>
+  gtsummary::as_gt() |>
+  gt::opt_table_font(stack = "monospace-code") |>
+  gt::gtsave("inst/prompts/example-4.pdf")
+
+# RTF
+example_4_tbl |>
+  gtsummary::as_flex_table() |>
+  flextable::save_as_rtf(path = "inst/prompts/example-4.rtf")
+
+# ARD
+example_4_ard <- ard_stack_hierarchical_count(
+  data = adae,
+  by = TRTA,
+  variables = c(AEBODSYS, AETERM),
+  over_variables = TRUE
+) |>
+  tibble::as_tibble() |>
+  select(-context, -fmt_fun, -warning, -error) |>
+  mutate(stat = as.character(stat)) |>
+  tidyr::unnest(group1_level) |>
+  tidyr::unnest(group2_level) |>
+  tidyr::unnest(variable_level)
+
+# JSON (ARD)
+example_4_ard |>
+  jsonlite::toJSON(pretty = TRUE)

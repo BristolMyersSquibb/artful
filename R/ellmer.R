@@ -10,10 +10,62 @@ parse_rtf <- function() {
 
   prompt <- interpolate_file(
     system.file("prompts", "prompt.md", package = "artful"),
-    user_html = rtf_to_html("inst/extdata/ellmer/example_2.rtf"),
-    user_pdf = content_pdf_file("inst/extdata/ellmer/example_2.pdf"),
-    example_1_html = rtf_to_html("inst/prompts/example_1.rtf"),
-    example_1_pdf = content_pdf_file("inst/prompts/example_1.pdf")
+    user_html = rtf_to_html(
+      system.file(
+        "prompts",
+        "example-4.rtf",
+        package = "artful"
+      )
+    ),
+    user_pdf = content_pdf_file(
+      system.file(
+        "prompts",
+        "example-4.pdf",
+        package = "artful"
+      )
+    ),
+    example_1_html = rtf_to_html(
+      system.file(
+        "prompts",
+        "example-1.rtf",
+        package = "artful"
+      )
+    ),
+    example_1_pdf = content_pdf_file(
+      system.file(
+        "prompts",
+        "example-1.pdf",
+        package = "artful"
+      )
+    ),
+    example_2_html = rtf_to_html(
+      system.file(
+        "prompts",
+        "example-2.rtf",
+        package = "artful"
+      )
+    ),
+    example_2_pdf = content_pdf_file(
+      system.file(
+        "prompts",
+        "example-2.pdf",
+        package = "artful"
+      )
+    ),
+    example_3_html = rtf_to_html(
+      system.file(
+        "prompts",
+        "example-3.rtf",
+        package = "artful"
+      )
+    ),
+    example_3_pdf = content_pdf_file(
+      system.file(
+        "prompts",
+        "example-3.pdf",
+        package = "artful"
+      )
+    )
   )
 
   chat <- chat_openai(
