@@ -74,35 +74,6 @@ An ARD data frame should abide to the following criteria:
    Do not calculate, infer, or hallucinate any values.
    If a value is missing, represent it as `null`.
 
-## EXAMPLES
-
-{{exampl_html}} and {{example_pdf}} should produce the following JSON:
-
-```json
-[
-  {
-    "table_id": "Table 14.1.1",
-    "group_id": "TRT01P",
-    "group_level": "Placebo",
-    "variable": "Age",
-    "variable_level": null,
-    "stat_name": "n",
-    "stat_label": "n",
-    "stat": 150
-  },
-  {
-    "table_id": "Table 14.1.1",
-    "group_id": "TRT01P",
-    "group_level": "Placebo",
-    "variable": "Age",
-    "variable_level": null,
-    "stat_name": "mean",
-    "stat_label": "Mean",
-    "stat": 65.2
-  }
-]
-```
-
 ## JSON OUTPUT SCHEMA
 
 1. Your response must be ONLY a single, valid JSON array.
@@ -124,3 +95,1806 @@ Each object in your JSON array may also have these additional, optional, keys:
 3. Do not include any explanatory text, comments, or markdown formatting.
 4. Do not use code blocks or any other formatting.
 5. Start your response with `[` and end with `]`.
+
+## EXAMPLES
+
+{{example_1_html}} and {{example_1_pdf}} should produce the following JSON:
+
+```json
+[
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGE",
+    "stat_name": "median",
+    "stat_label": "Median",
+    "stat": 76
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGE",
+    "stat_name": "p25",
+    "stat_label": "Q1",
+    "stat": 69
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGE",
+    "stat_name": "p75",
+    "stat_label": "Q3",
+    "stat": 82
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGE",
+    "stat_name": "mean",
+    "stat_label": "Mean",
+    "stat": 75.2093
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGE",
+    "stat_name": "sd",
+    "stat_label": "SD",
+    "stat": 8.5902
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGE",
+    "stat_name": "min",
+    "stat_label": "Min",
+    "stat": 52
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGE",
+    "stat_name": "max",
+    "stat_label": "Max",
+    "stat": 89
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGE",
+    "stat_name": "median",
+    "stat_label": "Median",
+    "stat": 76
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGE",
+    "stat_name": "p25",
+    "stat_label": "Q1",
+    "stat": 70.5
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGE",
+    "stat_name": "p75",
+    "stat_label": "Q3",
+    "stat": 80
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGE",
+    "stat_name": "mean",
+    "stat_label": "Mean",
+    "stat": 74.381
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGE",
+    "stat_name": "sd",
+    "stat_label": "SD",
+    "stat": 7.8861
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGE",
+    "stat_name": "min",
+    "stat_label": "Min",
+    "stat": 56
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGE",
+    "stat_name": "max",
+    "stat_label": "Max",
+    "stat": 88
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGE",
+    "stat_name": "median",
+    "stat_label": "Median",
+    "stat": 77.5
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGE",
+    "stat_name": "p25",
+    "stat_label": "Q1",
+    "stat": 71
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGE",
+    "stat_name": "p75",
+    "stat_label": "Q3",
+    "stat": 82
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGE",
+    "stat_name": "mean",
+    "stat_label": "Mean",
+    "stat": 75.6667
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGE",
+    "stat_name": "sd",
+    "stat_label": "SD",
+    "stat": 8.2861
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGE",
+    "stat_name": "min",
+    "stat_label": "Min",
+    "stat": 51
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGE",
+    "stat_name": "max",
+    "stat_label": "Max",
+    "stat": 88
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 14
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 86
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.1628
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 30
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 86
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.3488
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 42
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 86
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.4884
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 11
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.131
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 18
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.2143
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 55
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.6548
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 8
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.0952
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 29
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.3452
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 47
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.5595
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 53
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 86
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.6163
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 40
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.4762
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 50
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.5952
+  }
+]
+>
+> example_1_ard |>
++   jsonlite::toJSON(pretty = TRUE)
+[
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGE",
+    "stat_name": "median",
+    "stat_label": "Median",
+    "stat": 76
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGE",
+    "stat_name": "p25",
+    "stat_label": "Q1",
+    "stat": 69
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGE",
+    "stat_name": "p75",
+    "stat_label": "Q3",
+    "stat": 82
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGE",
+    "stat_name": "mean",
+    "stat_label": "Mean",
+    "stat": 75.2093
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGE",
+    "stat_name": "sd",
+    "stat_label": "SD",
+    "stat": 8.5902
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGE",
+    "stat_name": "min",
+    "stat_label": "Min",
+    "stat": 52
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGE",
+    "stat_name": "max",
+    "stat_label": "Max",
+    "stat": 89
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGE",
+    "stat_name": "median",
+    "stat_label": "Median",
+    "stat": 76
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGE",
+    "stat_name": "p25",
+    "stat_label": "Q1",
+    "stat": 70.5
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGE",
+    "stat_name": "p75",
+    "stat_label": "Q3",
+    "stat": 80
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGE",
+    "stat_name": "mean",
+    "stat_label": "Mean",
+    "stat": 74.381
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGE",
+    "stat_name": "sd",
+    "stat_label": "SD",
+    "stat": 7.8861
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGE",
+    "stat_name": "min",
+    "stat_label": "Min",
+    "stat": 56
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGE",
+    "stat_name": "max",
+    "stat_label": "Max",
+    "stat": 88
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGE",
+    "stat_name": "median",
+    "stat_label": "Median",
+    "stat": 77.5
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGE",
+    "stat_name": "p25",
+    "stat_label": "Q1",
+    "stat": 71
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGE",
+    "stat_name": "p75",
+    "stat_label": "Q3",
+    "stat": 82
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGE",
+    "stat_name": "mean",
+    "stat_label": "Mean",
+    "stat": 75.6667
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGE",
+    "stat_name": "sd",
+    "stat_label": "SD",
+    "stat": 8.2861
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGE",
+    "stat_name": "min",
+    "stat_label": "Min",
+    "stat": 51
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGE",
+    "stat_name": "max",
+    "stat_label": "Max",
+    "stat": 88
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 14
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 86
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.1628
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 30
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 86
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.3488
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 42
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 86
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.4884
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 11
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.131
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 18
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.2143
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 55
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.6548
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 8
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": "<65",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.0952
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 29
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": ">80",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.3452
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 47
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "AGEGR1",
+    "variable_level": "65-80",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.5595
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 53
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 86
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Placebo",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.6163
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 40
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline High Dose",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.4762
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 50
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "ARM",
+    "group1_level": "Xanomeline Low Dose",
+    "variable": "SEX",
+    "variable_level": "F",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.5952
+  }
+]
+```
+
+{{example_2_html}} and {{example_2_pdf}} should produce the following JSON:
+
+```json
+[
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE DERMATITIS",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 5
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE DERMATITIS",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 86
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE DERMATITIS",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.0581
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE DERMATITIS",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 7
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE DERMATITIS",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE DERMATITIS",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.0833
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE DERMATITIS",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 9
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE DERMATITIS",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE DERMATITIS",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.1071
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE ERYTHEMA",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 3
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE ERYTHEMA",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 86
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE ERYTHEMA",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.0349
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE ERYTHEMA",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 15
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE ERYTHEMA",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE ERYTHEMA",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.1786
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE ERYTHEMA",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 12
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE ERYTHEMA",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE ERYTHEMA",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.1429
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE IRRITATION",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 3
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE IRRITATION",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 86
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE IRRITATION",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.0349
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE IRRITATION",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 9
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE IRRITATION",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE IRRITATION",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.1071
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE IRRITATION",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 9
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE IRRITATION",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE IRRITATION",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.1071
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE PRURITUS",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 6
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE PRURITUS",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 86
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE PRURITUS",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.0698
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE PRURITUS",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 22
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE PRURITUS",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE PRURITUS",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.2619
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE PRURITUS",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 22
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE PRURITUS",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "GENERAL DISORDERS AND ADMINISTRATION SITE CONDITIONS",
+    "variable": "AEDECOD",
+    "variable_level": "APPLICATION SITE PRURITUS",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.2619
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "NERVOUS SYSTEM DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "DIZZINESS",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 2
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "NERVOUS SYSTEM DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "DIZZINESS",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 86
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "NERVOUS SYSTEM DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "DIZZINESS",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.0233
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "NERVOUS SYSTEM DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "DIZZINESS",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 11
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "NERVOUS SYSTEM DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "DIZZINESS",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "NERVOUS SYSTEM DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "DIZZINESS",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.131
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "NERVOUS SYSTEM DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "DIZZINESS",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 8
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "NERVOUS SYSTEM DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "DIZZINESS",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "NERVOUS SYSTEM DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "DIZZINESS",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.0952
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "ERYTHEMA",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 8
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "ERYTHEMA",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 86
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "ERYTHEMA",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.093
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "ERYTHEMA",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 14
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "ERYTHEMA",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "ERYTHEMA",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.1667
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "ERYTHEMA",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 14
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "ERYTHEMA",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "ERYTHEMA",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.1667
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "PRURITUS",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 8
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "PRURITUS",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 86
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "PRURITUS",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.093
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "PRURITUS",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 26
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "PRURITUS",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "PRURITUS",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.3095
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "PRURITUS",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 21
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "PRURITUS",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "PRURITUS",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.25
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "RASH",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 5
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "RASH",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 86
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Placebo",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "RASH",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.0581
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "RASH",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 9
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "RASH",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline High Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "RASH",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.1071
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "RASH",
+    "stat_name": "n",
+    "stat_label": "n",
+    "stat": 13
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "RASH",
+    "stat_name": "N",
+    "stat_label": "N",
+    "stat": 84
+  },
+  {
+    "group1": "TRTA",
+    "group1_level": "Xanomeline Low Dose",
+    "group2": "AEBODSYS",
+    "group2_level": "SKIN AND SUBCUTANEOUS TISSUE DISORDERS",
+    "variable": "AEDECOD",
+    "variable_level": "RASH",
+    "stat_name": "p",
+    "stat_label": "%",
+    "stat": 0.1548
+  }
+]
+```
+
+{{example_3_html}} and {{example_3_pdf}} should produce the following JSON:
+
+```json
+
+```
