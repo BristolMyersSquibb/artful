@@ -22,9 +22,7 @@ Each object in the array must represent a single statistical result, as per the 
 ## ARD STANDARD
 
 ARD is a standardised, machine-readable format specifically designed for encoding statistical analysis summaries derived from clinical trial data.
-However, the ARD standard is still not concretely defined.
-This means it is open to interpretation and has some scope of flexibility in terms of columns to be included.
-Approximately defined, an ARD data frame should abide to the following criteria:
+An ARD data frame should abide to the following criteria:
 
 1. Each row represents a single statistical value (e.g., a count and a percentage must be separated into unique rows and not share the same cell such as "10 (15%)" as is commonly observed in the RTF tables).
    This means ARD data frames are somewhat adjacent to tidy data frames in a long format.
