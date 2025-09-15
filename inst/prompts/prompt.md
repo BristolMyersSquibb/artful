@@ -28,6 +28,7 @@ An ARD data frame should abide to the following criteria:
    This means ARD data frames are somewhat adjacent to tidy data frames in a long format.
 
 2. Each row can provide the context to uniquely identify the unique statistical result value.
+   For example, a row in an ARD would not just contain a p-value; it would be linked to the specific study, subject group, parameter, and statistical test that generated it.
    This means the data frame should include at least the follow columns (with recommended column names in brackets):
 
 - group names (`group<N>`)
