@@ -37,18 +37,17 @@ example_1_tbl <- ADSL |>
   gtsummary::modify_header(
     gtsummary::all_stat_cols() ~ "**{level}**  \nN = {n}"
   ) |>
-  gtsummary::modify_column_alignment(columns = -label, "right")
+  gtsummary::modify_column_alignment(columns = -label, "right") |>
+  gtsummary::as_gt() |>
+  gt::opt_table_font(stack = "monospace-code")
 
 # PDF
 example_1_tbl |>
-  gtsummary::as_gt() |>
-  gt::opt_table_font(stack = "monospace-code") |>
   gt::gtsave("inst/prompts/example-1.pdf")
 
 # RTF
 example_1_tbl |>
-  gtsummary::as_flex_table() |>
-  flextable::save_as_rtf(path = "inst/prompts/example-1.rtf")
+  gt::gtsave("inst/prompts/example-1.rtf")
 
 # ARD
 df_continuous_ard <-
@@ -116,18 +115,17 @@ example_2_tbl <- ADAE |>
   gtsummary::modify_column_alignment(
     columns = gtsummary::all_stat_cols(),
     "right"
-  )
+  ) |>
+  gtsummary::as_gt() |>
+  gt::opt_table_font(stack = "monospace-code")
 
 # PDF
 example_2_tbl |>
-  gtsummary::as_gt() |>
-  gt::opt_table_font(stack = "monospace-code") |>
   gt::gtsave("inst/prompts/example-2.pdf")
 
 # RTF
 example_2_tbl |>
-  gtsummary::as_flex_table() |>
-  flextable::save_as_rtf(path = "inst/prompts/example-2.rtf")
+  gt::gtsave("inst/prompts/example-2.rtf")
 
 example_2_ard <- ard_stack_hierarchical(
   data = adae,
@@ -177,18 +175,17 @@ example_3_tbl <- ADLB |>
   ) |>
   gtsummary::modify_source_note(
     "Printing a few illustrative rows from the full table."
-  )
+  ) |>
+  gtsummary::as_gt() |>
+  gt::opt_table_font(stack = "monospace-code")
 
 # PDF
 example_3_tbl |>
-  gtsummary::as_gt() |>
-  gt::opt_table_font(stack = "monospace-code") |>
   gt::gtsave("inst/prompts/example-3.pdf")
 
 # RTF
 example_3_tbl |>
-  gtsummary::as_flex_table() |>
-  flextable::save_as_rtf(path = "inst/prompts/example-3.rtf")
+  gt::gtsave("inst/prompts/example-3.rtf")
 
 # ARD
 example_3_ard <- ADLB |>
@@ -230,18 +227,17 @@ example_4_tbl <- ADAE |>
   gtsummary::modify_column_alignment(
     columns = gtsummary::all_stat_cols(),
     "right"
-  )
+  ) |>
+  gtsummary::as_gt() |>
+  gt::opt_table_font(stack = "monospace-code")
 
 # PDF
 example_4_tbl |>
-  gtsummary::as_gt() |>
-  gt::opt_table_font(stack = "monospace-code") |>
   gt::gtsave("inst/prompts/example-4.pdf")
 
 # RTF
 example_4_tbl |>
-  gtsummary::as_flex_table() |>
-  flextable::save_as_rtf(path = "inst/prompts/example-4.rtf")
+  gt::gtsave("inst/prompts/example-4.rtf")
 
 # ARD
 example_4_ard <- ard_stack_hierarchical_count(
