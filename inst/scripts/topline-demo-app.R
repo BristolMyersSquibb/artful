@@ -904,6 +904,7 @@ rt_ae_ae1 <- function(input = example_data("rt-ae-ae1.rtf")) {
     artful:::pivot_group()
 
   ard_ish_parsed <- ard_ish |>
+    dplyr::rename(variable = variable_level) |>
     dplyr::mutate(
       .id = dplyr::row_number(),
       stat_list = stringr::str_extract_all(stat, "[\\d.]+")
@@ -914,11 +915,11 @@ rt_ae_ae1 <- function(input = example_data("rt-ae-ae1.rtf")) {
     tidyr::unnest(stat_list) |>
     dplyr::mutate(
       stat_name = dplyr::case_when(
-        variable_level != "DEATHs" &
+        variable != "DEATHs" &
           n_values > 1 &
           dplyr::row_number() == 1 ~
           "n",
-        variable_level != "DEATHs" &
+        variable != "DEATHs" &
           n_values > 1 &
           dplyr::row_number() == 2 ~
           "p",
@@ -943,8 +944,8 @@ rt_ae_ae1 <- function(input = example_data("rt-ae-ae1.rtf")) {
   ard_card <- ard |>
     dplyr::mutate(
       group1_level = purrr::map(group1_level, ~.x),
-      variable_level = purrr::map(
-        variable_level,
+      variable = purrr::map(
+        variable,
         ~ if (is.na(.x)) NULL else .x
       ),
       stat = purrr::map(stat, ~ as.numeric(.x)),
@@ -957,7 +958,14 @@ rt_ae_ae1 <- function(input = example_data("rt-ae-ae1.rtf")) {
       warning = purrr::map(1:dplyr::n(), ~NULL),
       error = purrr::map(1:dplyr::n(), ~NULL)
     ) |>
-    cards::as_card()
+    cards::as_card() |>
+    dplyr::mutate(
+      dplyr::across(
+        c(group1_level, variable),
+        unlist
+      )
+    ) |>
+    mutate(variable_level = NA, .after = variable)
 
   return(ard_card)
 }
@@ -1054,6 +1062,28 @@ rt_ae_saesoc1 <- function(input = example_data("rt-ae-saesoc1.rtf")) {
       warning = purrr::map(1:dplyr::n(), ~NULL),
       error = purrr::map(1:dplyr::n(), ~NULL)
     ) |>
+    dplyr::filter(context != "continuous") |> # We don't want "estimate", "ci_low", "ci_high"
+    tidyr::complete(
+      # All combinations of variable an variable_level must contain n and p stats otherwise gtsummary complains
+      tidyr::nesting(group1, group1_level),
+      tidyr::nesting(variable, variable_level),
+      stat_name = c("n", "p"),
+      fill = list(
+        stat = list(NA),
+        stat_label = NA_character_,
+        context = "categorical",
+        fmt_fun = list(0L),
+        warning = list(NULL),
+        error = list(NULL)
+      )
+    ) |>
+    dplyr::mutate(
+      stat_label = dplyr::case_when(
+        stat_name == "n" ~ "n",
+        stat_name == "p" ~ "%",
+        TRUE ~ stat_label
+      )
+    ) |>
     cards::as_card()
 
   return(ard_card)
@@ -1073,3 +1103,43 @@ rt_ae_saesoc1 <- function(input = example_data("rt-ae-saesoc1.rtf")) {
 # rt_ef_aacr70()
 # rt_ae_ae1()
 # rt_ae_saesoc1()
+
+# ------------------------------------------------------------------------------
+# GTSUMMARY hacks
+# ------------------------------------------------------------------------------
+# pkgload::load_all()
+
+# rt_ae_ae1() |>
+#   dplyr::filter(group1_level != "Total") |>
+#   gtsummary::tbl_ard_summary(
+#     by = "TRT",
+#     statistic = list(
+#       "DEATHs" ~ "{n}",
+#       "AEs" ~ "{n} ({p}%)",
+#       "TREATMENT RELATED AEs" ~ "{n} ({p}%)",
+#       "SAEs" ~ "{n} ({p}%)",
+#       "TREATMENT RELATED SAEs" ~ "{n} ({p}%)",
+#       "AEs LEADING TO DC" ~ "{n} ({p}%)"
+#     )
+#   ) |>
+#   gtsummary::add_stat_label()
+
+# rt_ae_saesoc1() |>
+#   dplyr::filter(group1_level != "Total") |>
+#   gtsummary::tbl_ard_summary(
+#     by = "TRT",
+#     statistic = list(
+#       "TOTAL SUBJECTS WITH AN EVENT" ~ "{n}",
+#       "Infections and infestations" ~ "{n} ({p}%)",
+#       "Injury, poisoning and procedural complications" ~ "{n} ({p}%)",
+#       "Cardiac disorders" ~ "{n} ({p}%)",
+#       "Eye disorders" ~ "{n} ({p}%)",
+#       "Gastrointestinal disorders" ~ "{n} ({p}%)",
+#       "Nervous system disorders" ~ "{n} ({p}%)",
+#       "Psychiatric disorders" ~ "{n} ({p}%)",
+#       "Reproductive system and breast disorders" ~ "{n} ({p}%)",
+#       "Skin and subcutaneous tissue disorders" ~ "{n} ({p}%)"
+#     ),
+#     missing_text = "no"
+#   ) |>
+#   gtsummary::add_stat_label()
