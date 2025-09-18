@@ -73,5 +73,5 @@ parse_rtf <- function() {
     model = "gpt-4o",
   )
 
-  result <- chat$chat(prompt)
+  result <- chat$chat(prompt, echo = "output")
 }
