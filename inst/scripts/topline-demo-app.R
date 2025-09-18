@@ -1122,7 +1122,23 @@ rt_ae_saesoc1 <- function(input = example_data("rt-ae-saesoc1.rtf")) {
 #       "AEs LEADING TO DC" ~ "{n} ({p}%)"
 #     )
 #   ) |>
-#   gtsummary::add_stat_label()
+#   gtsummary::add_stat_label() |>
+#   gtsummary::modify_header(
+#     gtsummary::all_stat_cols() ~ "**{level}**"
+#   ) |>
+#   gtsummary::as_gt() |>
+#   gt::tab_style(
+#     gt::cell_fill("#eee7e7"),
+#     gt::cells_column_labels(label)
+#   ) |>
+#   gt::tab_style(
+#     gt::cell_fill("#a69f9f"),
+#     gt::cells_column_labels(stat_1)
+#   ) |>
+#   gt::tab_style(
+#     gt::cell_fill("#33d6f1"),
+#     gt::cells_column_labels(stat_2)
+#   )
 
 # rt_ae_saesoc1() |>
 #   dplyr::filter(group1_level != "Total") |>
@@ -1139,7 +1155,22 @@ rt_ae_saesoc1 <- function(input = example_data("rt-ae-saesoc1.rtf")) {
 #       "Psychiatric disorders" ~ "{n} ({p}%)",
 #       "Reproductive system and breast disorders" ~ "{n} ({p}%)",
 #       "Skin and subcutaneous tissue disorders" ~ "{n} ({p}%)"
-#     ),
-#     missing_text = "no"
+#     )
 #   ) |>
-#   gtsummary::add_stat_label()
+#   gtsummary::add_stat_label() |>
+#   gtsummary::modify_header(
+#     gtsummary::all_stat_cols() ~ "**{level}**"
+#   ) |>
+#   gtsummary::as_gt() |>
+#   gt::tab_style(
+#     gt::cell_fill("#eee7e7"),
+#     gt::cells_column_labels(label)
+#   ) |>
+#   gt::tab_style(
+#     gt::cell_fill("#a69f9f"),
+#     gt::cells_column_labels(stat_1)
+#   ) |>
+#   gt::tab_style(
+#     gt::cell_fill("#33d6f1"),
+#     gt::cells_column_labels(stat_2)
+#   )
