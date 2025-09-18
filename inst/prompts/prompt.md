@@ -1,14 +1,9 @@
 ## TASK
 
-You are being provided with two synchronized inputs representing the same clinical trial table:
+You are being provided with two synchronized inputs representing the same clinical trial table.
+An image accessible via the file <image>"example-4.pdf"</image> and the following <html>"user_html"</html>:
 
-<image>
-{{user_pdf}}
-</image>
-
-<html>
 {{user_html}}
-</html>
 
 Your task is to parse the table using both the <image> and <html> inputs, and structure the data into a single JSON array of objects.
 Each object in the array must represent a single statistical result, as per the ARD standard.
@@ -98,7 +93,11 @@ Each object in your JSON array may also have these additional, optional, keys:
 
 ## EXAMPLES
 
-{{example_1_html}} and {{example_1_pdf}} should produce the following JSON:
+"example-1.pdf" and the HTML:
+
+{{example_1_html}}
+
+produce the following JSON:
 
 ```json
 [
@@ -596,8 +595,11 @@ Each object in your JSON array may also have these additional, optional, keys:
   }
 ]
 ```
+"example-2.pdf" and the HTML:
 
-{{example_2_html}} and {{example_2_pdf}} should produce the following JSON:
+{{example_2_html}}
+
+produce the following JSON:
 
 ```json
 [
@@ -1396,7 +1398,11 @@ Each object in your JSON array may also have these additional, optional, keys:
 ]
 ```
 
-{{example_3_html}} and {{example_3_pdf}} should produce the following JSON:
+"example-3.pdf" and the HTML:
+
+{{example_3_html}}
+
+produce the following JSON:
 
 ```json
 [
