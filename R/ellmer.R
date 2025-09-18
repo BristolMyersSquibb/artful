@@ -1,4 +1,12 @@
-parse_rtf <- function() {
+#' @examples
+#' \dontrun{
+#' rtf_file <- system.file("prompts","example-4.rtf", package = "artful")
+#' rtf_to_ard(rtf = rtf_file)
+#' }
+rtf_to_ard <- function(rtf) {
+  user_pdf <- tempfile(fileext = ".pdf")
+  rtf_to_pdf(rtf, pdf_path = user_pdf)
+
   system_prompt <- function() {
     "
     You are an expert data extraction bot specializing in pharmaceutical
@@ -10,31 +18,11 @@ parse_rtf <- function() {
 
   prompt <- interpolate_file(
     system.file("prompts", "prompt.md", package = "artful"),
-    user_html = rtf_to_html(
-      system.file(
-        "prompts",
-        "example-4.rtf",
-        package = "artful"
-      )
-    ),
-    user_pdf = content_pdf_file(
-      system.file(
-        "prompts",
-        "example-4.pdf",
-        package = "artful"
-      )
-    ),
+    user_html = rtf_to_html(rtf),
     example_1_html = rtf_to_html(
       system.file(
         "prompts",
         "example-1.rtf",
-        package = "artful"
-      )
-    ),
-    example_1_pdf = content_pdf_file(
-      system.file(
-        "prompts",
-        "example-1.pdf",
         package = "artful"
       )
     ),
@@ -45,24 +33,10 @@ parse_rtf <- function() {
         package = "artful"
       )
     ),
-    example_2_pdf = content_pdf_file(
-      system.file(
-        "prompts",
-        "example-2.pdf",
-        package = "artful"
-      )
-    ),
     example_3_html = rtf_to_html(
       system.file(
         "prompts",
         "example-3.rtf",
-        package = "artful"
-      )
-    ),
-    example_3_pdf = content_pdf_file(
-      system.file(
-        "prompts",
-        "example-3.pdf",
         package = "artful"
       )
     )
@@ -73,5 +47,30 @@ parse_rtf <- function() {
     model = "gpt-4o",
   )
 
-  result <- chat$chat(prompt, echo = "output")
+  chat$chat(
+    prompt,
+    content_pdf_file(user_pdf),
+    content_pdf_file(
+      system.file(
+        "prompts",
+        "example-1.pdf",
+        package = "artful"
+      )
+    ),
+    content_pdf_file(
+      system.file(
+        "prompts",
+        "example-2.pdf",
+        package = "artful"
+      )
+    ),
+    content_pdf_file(
+      system.file(
+        "prompts",
+        "example-3.pdf",
+        package = "artful"
+      )
+    ),
+    echo = "output"
+  )
 }
