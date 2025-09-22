@@ -47,7 +47,7 @@ rtf_to_ard <- function(rtf) {
     model = "gpt-4o",
   )
 
-  chat$chat_structured(
+  chat_output <- chat$chat_structured(
     prompt,
     content_pdf_file(user_pdf),
     content_pdf_file(
@@ -74,6 +74,8 @@ rtf_to_ard <- function(rtf) {
     type = type_ard_array(),
     echo = "output"
   )
+
+  tibble::as_tibble(chat_output)
 }
 
 
