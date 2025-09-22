@@ -12,7 +12,8 @@ RoxygenNote: 7.3.2
 Imports:
     ellmer,
     pandoc,
-    readr
+    readr,
+    tibble
 Suggests: 
     roxyglobals,
     testthat (>= 3.0.0),
