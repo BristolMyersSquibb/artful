@@ -1,7 +1,7 @@
 ## TASK
 
 You are being provided with two synchronized inputs representing the same clinical trial table.
-An image accessible via the file <image>"example-4.pdf"</image> and the following <html>"user_html"</html>:
+An image accessible via the file <image>user_pdf</image> and the following <html>"user_html"</html>:
 
 {{user_html}}
 
