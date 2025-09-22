@@ -47,7 +47,7 @@ rtf_to_ard <- function(rtf) {
     model = "gpt-4o",
   )
 
-  chat$chat(
+  chat$chat_structured(
     prompt,
     content_pdf_file(user_pdf),
     content_pdf_file(
@@ -71,6 +71,7 @@ rtf_to_ard <- function(rtf) {
         package = "artful"
       )
     ),
+    type = type_ard_array(),
     echo = "output"
   )
 }
@@ -212,9 +213,9 @@ type_ard_array <- function() {
       required = TRUE
     ),
     stat = type_string(
-      "The numeric or text value. Percentages as decimals (e.g., '0.154' for '15.4%')"
-    ),
-    required = TRUE
+      "The numeric or text value. Percentages as decimals (e.g., '0.154' for '15.4%')",
+      required = TRUE
+    )
   )
 
   type_array(
