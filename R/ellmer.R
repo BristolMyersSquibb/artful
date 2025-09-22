@@ -44,6 +44,9 @@
 #'
 #' @export
 rtf_to_ard <- function(rtf) {
+  # Prevent time outs due to long processing times
+  withr::local_options(ellmer_timeout_s = 60 * 10)
+
   user_pdf <- tempfile(fileext = ".pdf")
   rtf_to_pdf(rtf, pdf_path = user_pdf)
 
