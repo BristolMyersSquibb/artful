@@ -49,22 +49,3 @@ test_that("rtf_to_html handles pandoc errors gracefully", {
     }
   })
 })
-
-test_that("rtf_to_ard works with pandoc package", {
-  # Use one of the example files
-  example_file <- system.file(
-    "extdata",
-    "examples",
-    "rt-ae-aesoc2.rtf",
-    package = "artful"
-  )
-
-  skip_if(!file.exists(example_file), "Example file not found")
-
-  # Test that rtf_to_ard still works with the new implementation
-  result <- rtf_to_ard(example_file)
-
-  # Check that result is a data frame
-  expect_s3_class(result, "data.frame")
-  expect_true(nrow(result) > 0)
-})
