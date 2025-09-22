@@ -27,9 +27,10 @@ An ARD data frame should abide to the following criteria:
 
 ## CRITICAL RULES
 
-1. **Process All Pages:** You must iterate through every page provided in the image input.
+1. **Process All Data:** You must iterate through every page provided in the image input.
    Do not stop after finding the first table.
    Ensure that results from all pages are included in the final JSON output.
+   Ensure that all values found in <html> appear at least once in your final output.
 
 2. **Split Compound Statistics:** If a single stat cell contains multiple values (e.g., "12 (15.4%)" for count and percentage), you MUST generate separate JSON members for each stat.
    For example, one for the count (n) with value 12, and one for the percentage (p) with value 15.4.
