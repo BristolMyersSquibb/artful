@@ -69,29 +69,6 @@ An ARD data frame should abide to the following criteria:
    Do not calculate, infer, or hallucinate any values.
    If a value is missing, represent it as `null`.
 
-## JSON OUTPUT SCHEMA
-
-1. Your response must be ONLY a single, valid JSON array.
-2. Each object in your JSON array must have exactly these keys:
-
-- `table_id`: (String) Table identifier from title (e.g., "Table 14.1.1")
-- `group1`: (String) Name of grouping variable (e.g., "TRT01P", "AVISIT")
-- `group1_level`: (String) Specific level of that group (e.g., "Placebo", "Week 8")
-- `variable`: (String) Primary variable being analyzed (e.g., "Age", "Sex")
-- `variable_level`: (String or null) Specific level for categorical variables (e.g., "Female"). Use `null` for continuous variables or summary rows
-- `stat_name`: (String) Standardized statistic name from mapping table (e.g., "n", "mean", "p")
-- `stat_label`: (String) Human-readable statistic label as it appears in table (e.g., "Mean", "n", "%")
-- `stat`: (Number or String) The numeric or text value. Represent percentages as numbers (e.g., 15.4 for "15.4%")
-
-Each object in your JSON array may also have these additional, optional, keys:
-
-- `group<N>` (String) N additional groups that capture more context about a single statistic.
-- `group<N>_level` (String) N additional group levels that capture more context about a single statistic.
-
-3. Do not include any explanatory text, comments, or markdown formatting.
-4. Do not use code blocks or any other formatting.
-5. Start your response with `[` and end with `]`.
-
 ## EXAMPLES
 
 "example-1.pdf" and the HTML:
