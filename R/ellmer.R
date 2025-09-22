@@ -1,8 +1,48 @@
+#' Convert RTF Clinical Trial Tables to Analysis Results Data (ARD) Format
+#'
+#' Extracts structured statistical data from RTF-formatted clinical trial tables
+#' and converts them to ARD (Analysis Results Data) standard format using
+#' Large Language Model (LLM) processing with structured data extraction.
+#'
+#' @param rtf Character string specifying the path to an RTF file containing a
+#' clinical trial table to be converted to ARD format.
+#'
+#' @return A \code{tibble} containing the extracted ARD records with columns:
+#' \describe{
+#'   \item{table_id}{Table identifier from title (optional)}
+#'   \item{group1, group1_level}{First grouping variable and its level (optional)}
+#'   \item{group2, group2_level}{Second grouping variable and its level (optional)}
+#'   \item{group3, group3_level}{Third grouping variable and its level (optional)}
+#'   \item{variable}{Primary variable being analyzed}
+#'   \item{variable_level}{Level for categorical variables (optional)}
+#'   \item{stat_name}{Standardized statistic name from ARD mapping}
+#'   \item{stat_label}{Human-readable statistic label}
+#'   \item{stat}{The statistical value as string}
+#' }
+#'
+#' @details
+#' This function performs the following steps:
+#' \enumerate{
+#'   \item Converts the input RTF file to PDF format for visual processing
+#'   \item Converts the RTF to HTML for text extraction
+#'   \item Uses multi-shot prompting with three example RTF/PDF pairs to guide
+#'     the LLM in understanding the expected output format
+#'   \item Employs structured data extraction via \code{chat_structured()} to
+#'     ensure the output conforms to ARD standards
+#'   \item Returns results as a tibble for easy manipulation in R
+#' }
+#'
+#' @note
+#' Requires valid OpenAI API credentials to be configured. The function
+#' relies on example files included in the package for multi-shot prompting.
+#'
 #' @examples
 #' \dontrun{
 #' rtf_file <- system.file("prompts","example-4.rtf", package = "artful")
 #' rtf_to_ard(rtf = rtf_file)
 #' }
+#'
+#' @export
 rtf_to_ard <- function(rtf) {
   user_pdf <- tempfile(fileext = ".pdf")
   rtf_to_pdf(rtf, pdf_path = user_pdf)
