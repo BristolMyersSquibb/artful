@@ -111,11 +111,11 @@ type_ard_array <- function() {
     ),
     group1 = type_string(
       "Name of first grouping variable (e.g., 'ARM', 'TRTA')",
-      required = FALSE
+      required = TRUE
     ),
     group1_level = type_string(
       "Specific level of first group (e.g., 'Placebo', 'Week 8')",
-      required = FALSE
+      required = TRUE
     ),
     group2 = type_string(
       "Name of second grouping variable if present",
@@ -134,7 +134,8 @@ type_ard_array <- function() {
       required = FALSE
     ),
     variable = type_string(
-      "Primary variable being analyzed (e.g., 'Age', 'Sex', 'AVAL')"
+      "Primary variable being analyzed (e.g., 'Age', 'Sex', 'AVAL')",
+      required = TRUE
     ),
     variable_level = type_string(
       "Specific level for categorical variables (e.g., 'Female'). NULL for continuous variables",
@@ -168,7 +169,8 @@ type_ard_array <- function() {
         "df",
         "null"
       ),
-      "Standardized statistic name from ARD mapping table"
+      "Standardized statistic name from ARD mapping table",
+      required = TRUE
     ),
     stat_label = type_enum(
       c(
@@ -206,11 +208,13 @@ type_ard_array <- function() {
         "df",
         "Unknown"
       ),
-      "Human-readable statistic label from ARD mapping table"
+      "Human-readable statistic label from ARD mapping table",
+      required = TRUE
     ),
     stat = type_string(
       "The numeric or text value. Percentages as decimals (e.g., '0.154' for '15.4%')"
-    )
+    ),
+    required = TRUE
   )
 
   type_array(
