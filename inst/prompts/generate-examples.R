@@ -4,6 +4,7 @@
 # https://github.com/insightsengineering/cards/tree/main/vignettes/articles
 # ------------------------------------------------------------------------------
 
+pkgload::load_all()
 library(cards)
 library(dplyr)
 gtsummary::theme_gtsummary_compact()
@@ -48,6 +49,10 @@ example_1_tbl |>
 # RTF
 example_1_tbl |>
   gt::gtsave("inst/prompts/example-1.rtf")
+
+# HTML
+rtf_to_html("inst/prompts/example-1.rtf") |>
+  writeLines("inst/prompts/example-1.html")
 
 # ARD
 df_continuous_ard <-
@@ -127,6 +132,10 @@ example_2_tbl |>
 example_2_tbl |>
   gt::gtsave("inst/prompts/example-2.rtf")
 
+# HTML
+rtf_to_html("inst/prompts/example-2.rtf") |>
+  writeLines("inst/prompts/example-2.html")
+
 example_2_ard <- ard_stack_hierarchical(
   data = adae,
   by = TRTA,
@@ -187,6 +196,10 @@ example_3_tbl |>
 example_3_tbl |>
   gt::gtsave("inst/prompts/example-3.rtf")
 
+# HTML
+rtf_to_html("inst/prompts/example-3.rtf") |>
+  writeLines("inst/prompts/example-3.html")
+
 # ARD
 example_3_ard <- ADLB |>
   filter(
@@ -238,6 +251,10 @@ example_4_tbl |>
 # RTF
 example_4_tbl |>
   gt::gtsave("inst/prompts/example-4.rtf")
+
+# HTML
+rtf_to_html("inst/prompts/example-4.rtf") |>
+  writeLines("inst/prompts/example-4.html")
 
 # ARD
 example_4_ard <- ard_stack_hierarchical_count(
