@@ -34,22 +34,29 @@ openwebui_read_html <- function(example) {
 }
 
 #' Convert an RTF to ARD via Open WebUI
+#'
+#' @noRd
+#'
+#' @examples
+#' \dontrun{
+#' openwebui_rtf_to_ard("inst/extdata/examples/rt-ae-ae1.rtf")
+#' }
 openwebui_rtf_to_ard <- function(rtf) {
   # Prevent time outs due to long processing times
-  withr::local_options(ellmer_timeout_s = 60 * 10)
+  withr::local_options(ellmer_timeout_s = 60 * 30)
 
   user_pdf <- tempfile(fileext = ".pdf")
   rtf_to_pdf(rtf, pdf_path = user_pdf)
 
-  user_file_id <- openwebui_file_upload(user_rtf)
+  user_file_id <- openwebui_file_upload(user_pdf)
   example_1_file_id <- openwebui_file_upload(prompt_path("example-1.pdf"))
   example_2_file_id <- openwebui_file_upload(prompt_path("example-2.pdf"))
   example_3_file_id <- openwebui_file_upload(prompt_path("example-3.pdf"))
 
   system_prompt <- function() {
     "
-    You are an expert data extraction bot specialised in generating Analysis
-    Results Data (ARD) sets.
+    You are an expert data scientist specialised in generating CDISC
+    Analysis-Ready Data (ARD) from RTF files.
     "
   }
 
@@ -75,10 +82,10 @@ openwebui_rtf_to_ard <- function(rtf) {
     model = "gpt-oss:120b",
     api_args = list(
       files = list(
-        list(type = "file", id = file_id_user),
-        list(type = "file", id = file_id_example_1),
-        list(type = "file", id = file_id_example_2),
-        list(type = "file", id = file_id_example_3)
+        list(type = "file", id = user_file_id),
+        list(type = "file", id = example_1_file_id),
+        list(type = "file", id = example_2_file_id),
+        list(type = "file", id = example_3_file_id)
       )
     )
   )
