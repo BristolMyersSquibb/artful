@@ -97,7 +97,8 @@ example_1_ard <- bind_ard(
 
 # JSON (ARD)
 example_1_ard |>
-  jsonlite::toJSON(pretty = TRUE)
+  jsonlite::toJSON() |>
+  jsonlite::write_json("inst/prompts/example-1.json")
 
 # ------------------------------------------------------------------------------
 # Example 2
@@ -153,7 +154,8 @@ example_2_ard <- ard_stack_hierarchical(
 
 # JSON (ARD)
 example_2_ard |>
-  jsonlite::toJSON(pretty = TRUE)
+  jsonlite::toJSON() |>
+  jsonlite::write_json("inst/prompts/example-2.json")
 
 # ------------------------------------------------------------------------------
 # Example 3
@@ -220,7 +222,8 @@ example_3_ard <- ADLB |>
 
 # JSON (ARD)
 example_3_ard |>
-  jsonlite::toJSON(pretty = TRUE)
+  jsonlite::toJSON() |>
+  jsonlite::write_json("inst/prompts/example-3.json")
 
 # ------------------------------------------------------------------------------
 # Example 4
@@ -272,4 +275,5 @@ example_4_ard <- ard_stack_hierarchical_count(
 
 # JSON (ARD)
 example_4_ard |>
-  jsonlite::toJSON(pretty = TRUE)
+  jsonlite::toJSON() |>
+  jsonlite::write_json("inst/prompts/example-4.json")
