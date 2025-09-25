@@ -2,7 +2,7 @@
 
 Here are two inputs representing the same clinical analysis data:
 
-1. PDF: <user-pdf>{{user_file_id}}</user-pdf>
+1. PDF: <user-pdf>file id: {{user_file_id}}</user-pdf>
 2. HTML: <user-html>{{user_html}}</user-html>.
 
 Your task is to convert the <user-pdf> and <user-html> inputs to the CDISC Analysis‑Ready Data (ARD) standard.
@@ -73,6 +73,6 @@ An ARD data frame should abide to the following criteria:
 
 ## EXAMPLES
 
-<example-1-pdf>{{file_id_example_1}}</example-1-pdf> and <example-1-html>{{example_1_html}}</example-1-html> produce <example-1-json>{{example_1_json}}</example-1-json>.
-<example-2-pdf>{{file_id_example_2}}</example-2-pdf> and <example-2-html>{{example_2_html}}</example-2-html> produce <example-2-json>{{example_2_json}}</example-2-json>.
-<example-3-pdf>{{file_id_example_3}}</example-3-pdf> and <example-3-html>{{example_3_html}}</example-3-html> produce <example-3-json>{{example_3_json}}</example-3-json>.
+<example-1-pdf>file id: {{example_1_file_id}}</example-1-pdf> and <example-1-html>{{example_1_html}}</example-1-html> produce <example-1-json>{{example_1_json}}</example-1-json>.
+<example-2-pdf>file id: {{example_2_file_id}}</example-2-pdf> and <example-2-html>{{example_2_html}}</example-2-html> produce <example-2-json>{{example_2_json}}</example-2-json>.
+<example-3-pdf>file id: {{example_3_file_id}}</example-3-pdf> and <example-3-html>{{example_3_html}}</example-3-html> produce <example-3-json>{{example_3_json}}</example-3-json>.
