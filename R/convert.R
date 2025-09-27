@@ -82,11 +82,13 @@ rtf_to_ard <- function(file, pivot = TRUE) {
   result <- rtf_to_html(temp_rtf) |>
     html_to_dataframe() |>
     manage_exceptions() |>
-    strip_pagination() |>
-    strip_indentation()
+    strip_pagination()
 
   if (pivot) {
-    result <- pivot_group(result)
+    result <-
+      result |>
+      pivot_group() |>
+      strip_indentation()
   }
 
   result
