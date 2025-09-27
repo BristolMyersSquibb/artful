@@ -4,13 +4,17 @@
 \alias{rtf_to_ard}
 \title{Convert an RTF Table into an ARD data frame}
 \usage{
-rtf_to_ard(file)
+rtf_to_ard(file, pivot = TRUE)
 }
 \arguments{
 \item{file}{A string, the path to the input .rtf file.}
+
+\item{pivot}{Logical, whether to pivot the grouping variables to long format.
+Default is TRUE to maintain backward compatibility.}
 }
 \value{
-an R data frame following the ARD standard.
+an R data frame following the ARD standard (if pivot = TRUE) or a
+data frame with grouping variables in wide format (if pivot = FALSE).
 }
 \description{
 This function converts a table in RTF format into a data frame in R,
