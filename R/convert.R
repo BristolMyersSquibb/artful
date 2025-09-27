@@ -63,11 +63,14 @@ html_to_dataframe <- function(html) {
 #' which acts as a glue to the lower-level functions.
 #'
 #' @param file A string, the path to the input .rtf file.
+#' @param pivot Logical, whether to pivot the grouping variables to long format.
+#'   Default is TRUE to maintain backward compatibility.
 #'
-#' @return an R data frame following the ARD standard.
+#' @return an R data frame following the ARD standard (if pivot = TRUE) or a
+#'   data frame with grouping variables in wide format (if pivot = FALSE).
 #'
 #' @export
-rtf_to_ard <- function(file) {
+rtf_to_ard <- function(file, pivot = TRUE) {
   temp_rtf <- tempfile(fileext = ".rtf")
 
   file |>
@@ -76,12 +79,17 @@ rtf_to_ard <- function(file) {
     rtf_linebreaks() |>
     readr::write_file(temp_rtf)
 
-  rtf_to_html(temp_rtf) |>
+  result <- rtf_to_html(temp_rtf) |>
     html_to_dataframe() |>
     manage_exceptions() |>
     strip_pagination() |>
-    strip_indentation() |>
-    pivot_group()
+    strip_indentation()
+
+  if (pivot) {
+    result <- pivot_group(result)
+  }
+
+  result
 }
 
 #' Convert RTF file to PDF
