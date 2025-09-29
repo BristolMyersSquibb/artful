@@ -58,6 +58,11 @@ rtf_indentation <- function(string) {
 #' @return A character string containing the processed RTF content with line
 #' breaks replaced by spaces.
 #'
+#' @examples
+#' \dontrun{
+#' rtf_linebreaks("{A new{\\line}line}")
+#' }
+#'
 #' @keywords internal
 rtf_linebreaks <- function(string) {
   stringr::str_replace_all(string, "\\{\\\\line\\}", " ")
