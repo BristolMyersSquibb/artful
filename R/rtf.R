@@ -24,13 +24,13 @@
 #'
 #' @examples
 #' \dontrun{
-#' rtf_indentation("{  two spaces inside the cell\\cell}")
-#' rtf_indentation("\\li192{two spaces before the cell\\cell}")
-#' rtf_indentation("\\li576{ Seven spaces in total\\cell}")
+#' rtf_spaces_to_nbsp("{  two spaces inside the cell\\cell}")
+#' rtf_spaces_to_nbsp("\\li192{two spaces before the cell\\cell}")
+#' rtf_spaces_to_nbsp("\\li576{ Seven spaces in total\\cell}")
 #' }
 #'
 #' @keywords internal
-rtf_indentation <- function(string) {
+rtf_spaces_to_nbsp <- function(string) {
   string |>
     stringr::str_replace_all("(\\{)( +)(.*?\\\\cell\\})", function(match) {
       groups <- stringr::str_match(match, "(\\{)( +)(.*?\\\\cell\\})")
@@ -60,10 +60,10 @@ rtf_indentation <- function(string) {
 #'
 #' @examples
 #' \dontrun{
-#' rtf_linebreaks("{A new{\\line}line}")
+#' rtf_line_to_spaces("{A new{\\line}line}")
 #' }
 #'
 #' @keywords internal
-rtf_linebreaks <- function(string) {
+rtf_line_to_spaces <- function(string) {
   stringr::str_replace_all(string, "\\{\\\\line\\}", " ")
 }
