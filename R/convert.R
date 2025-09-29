@@ -86,9 +86,9 @@ rtf_to_df <- function(file) {
 
   rtf_to_html(temp_rtf) |>
     html_to_dataframe() |>
+    nbsp_to_spaces() |>
     manage_exceptions() |>
-    strip_pagination() |>
-    nbsp_to_spaces()
+    strip_pagination()
 }
 
 #' Convert an RTF Table into an ARD data frame
