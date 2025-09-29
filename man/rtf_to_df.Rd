@@ -20,3 +20,8 @@ removing headers, footers, empty columns, etc., are performed). This function
 does not attempt to produce an ARD. Instead, this step is off-loaded to other
 functions.
 }
+\examples{
+\dontrun{
+rtf_to_df(rtf_example(22))
+}
+}

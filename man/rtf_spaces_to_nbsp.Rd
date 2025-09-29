@@ -16,7 +16,9 @@ indentation codes replaced by HTML non-breaking space entities (\verb{&nbsp;}).
 \description{
 Processes an RTF (Rich Text Format) encoded string to fix indentation issues
 by replacing RTF-specific indentation codes and spaces with HTML non-breaking
-space entities.
+space entities. This is necessary because pandoc drops RTF-specific
+indentation codes which capture information about how the tables should be
+structured and which must be kept.
 }
 \details{
 The function performs the following transformations:
