@@ -70,6 +70,11 @@ html_to_dataframe <- function(html) {
 #' @return an R data frame.
 #'
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' rtf_to_df(rtf_example(22))
+#' }
 rtf_to_df <- function(file) {
   temp_rtf <- tempfile(fileext = ".rtf")
 
@@ -79,7 +84,10 @@ rtf_to_df <- function(file) {
     rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
-  rtf_to_html(temp_rtf)
+  rtf_to_html(temp_rtf) |>
+    html_to_dataframe() |>
+    manage_exceptions() |>
+    strip_pagination()
 }
 
 #' Convert an RTF Table into an ARD data frame
@@ -93,6 +101,11 @@ rtf_to_df <- function(file) {
 #' @return an R data frame following the ARD standard.
 #'
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' rtf_to_ard(rtf_example(4))
+#' }
 rtf_to_ard <- function(file) {
   temp_rtf <- tempfile(fileext = ".rtf")
 
