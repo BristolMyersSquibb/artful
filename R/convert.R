@@ -74,6 +74,7 @@ html_to_dataframe <- function(html) {
 #' @examples
 #' \dontrun{
 #' rtf_to_df(rtf_example(1))
+#' purrr::map(1:21, ~ rtf_to_df(rtf_example(.x)))
 #' }
 rtf_to_df <- function(file) {
   temp_rtf <- tempfile(fileext = ".rtf")

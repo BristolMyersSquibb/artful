@@ -23,5 +23,6 @@ functions.
 \examples{
 \dontrun{
 rtf_to_df(rtf_example(1))
+purrr::map(1:21, ~ rtf_to_df(rtf_example(.x)))
 }
 }
