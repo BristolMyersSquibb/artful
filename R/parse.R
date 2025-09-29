@@ -221,7 +221,7 @@ nbsp_to_spaces <- function(data) {
     mutate(
       across(
         everything(),
-        ~ stringr::str_replace_all(.x, "&nbsp;", " ")
+        ~ stringr::str_replace_all(.x, "&nbsp;|nbsp;", " ")
       )
     )
 }
