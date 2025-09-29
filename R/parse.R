@@ -115,6 +115,7 @@ set_colnames <- function(data) {
   # are empty strings.
   colnames_missing_indices <- which(colnames == "")
 
+  x_counter <- 1
   for (i in colnames_missing_indices) {
     filtered <- filter(non_repeating, if_all(!i, ~ .x == ""))
     if (nrow(filtered != 0)) {
@@ -122,7 +123,8 @@ set_colnames <- function(data) {
         slice(1L) |>
         pull(i)
     } else {
-      replacement <- "X1"
+      replacement <- paste0("X", x_counter)
+      x_counter <- x_counter + 1
     }
     colnames[i] <- replacement
   }
@@ -186,6 +188,7 @@ strip_pagination <- function(data) {
   colnames <- slice(non_repeating, 1L) |> as.character()
   colnames_missing_indices <- which(colnames == "")
 
+  x_counter <- 1
   for (i in colnames_missing_indices) {
     filtered <- filter(non_repeating, if_all(!i, ~ .x == ""))
     if (nrow(filtered != 0)) {
@@ -193,7 +196,8 @@ strip_pagination <- function(data) {
         slice(1L) |>
         pull(i)
     } else {
-      replacement <- "X1"
+      replacement <- paste0("X", x_counter)
+      x_counter <- x_counter + 1
     }
     colnames[i] <- replacement
   }
