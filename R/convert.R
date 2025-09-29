@@ -56,6 +56,41 @@ html_to_dataframe <- function(html) {
     rvest::html_table()
 }
 
+#' Convert an RTF Table into a data frame
+#'
+#' This function converts a table in RTF format into a data frame in R. The
+#' function aims to return a copy of the original RTF table with as little data
+#' preprocessing performed as possible (i.e., only essential steps such as
+#' removing headers, footers, empty columns, etc., are performed). This function
+#' does not attempt to produce an ARD. Instead, this step is off-loaded to other
+#' functions.
+#'
+#' @param file A string, the path to the input .rtf file.
+#'
+#' @return an R data frame.
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' rtf_to_df(rtf_example(1))
+#' }
+rtf_to_df <- function(file) {
+  temp_rtf <- tempfile(fileext = ".rtf")
+
+  file |>
+    readr::read_file() |>
+    rtf_spaces_to_nbsp() |>
+    rtf_line_to_spaces() |>
+    readr::write_file(temp_rtf)
+
+  rtf_to_html(temp_rtf) |>
+    html_to_dataframe() |>
+    nbsp_to_spaces() |>
+    manage_exceptions() |>
+    strip_pagination()
+}
+
 #' Convert an RTF Table into an ARD data frame
 #'
 #' This function converts a table in RTF format into a data frame in R,
@@ -67,13 +102,18 @@ html_to_dataframe <- function(html) {
 #' @return an R data frame following the ARD standard.
 #'
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#' rtf_to_ard(rtf_example(4))
+#' }
 rtf_to_ard <- function(file) {
   temp_rtf <- tempfile(fileext = ".rtf")
 
   file |>
     readr::read_file() |>
-    rtf_indentation() |>
-    rtf_linebreaks() |>
+    rtf_spaces_to_nbsp() |>
+    rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   rtf_to_html(temp_rtf) |>

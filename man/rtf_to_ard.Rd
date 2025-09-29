@@ -17,3 +17,8 @@ This function converts a table in RTF format into a data frame in R,
 following the ARD standard. This is the top-level function of this package
 which acts as a glue to the lower-level functions.
 }
+\examples{
+\dontrun{
+rtf_to_ard(rtf_example(4))
+}
+}

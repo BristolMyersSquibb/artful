@@ -2,7 +2,9 @@
 #'
 #' Processes an RTF (Rich Text Format) encoded string to fix indentation issues
 #' by replacing RTF-specific indentation codes and spaces with HTML non-breaking
-#' space entities.
+#' space entities. This is necessary because pandoc drops RTF-specific
+#' indentation codes which capture information about how the tables should be
+#' structured and which must be kept.
 #'
 #' @param string A character vector specifying the RTF encodings.
 #'
@@ -24,13 +26,13 @@
 #'
 #' @examples
 #' \dontrun{
-#' rtf_indentation("{  two spaces inside the cell\\cell}")
-#' rtf_indentation("\\li192{two spaces before the cell\\cell}")
-#' rtf_indentation("\\li576{ Seven spaces in total\\cell}")
+#' rtf_spaces_to_nbsp("{  two spaces inside the cell\\cell}")
+#' rtf_spaces_to_nbsp("\\li192{two spaces before the cell\\cell}")
+#' rtf_spaces_to_nbsp("\\li576{ Seven spaces in total\\cell}")
 #' }
 #'
 #' @keywords internal
-rtf_indentation <- function(string) {
+rtf_spaces_to_nbsp <- function(string) {
   string |>
     stringr::str_replace_all("(\\{)( +)(.*?\\\\cell\\})", function(match) {
       groups <- stringr::str_match(match, "(\\{)( +)(.*?\\\\cell\\})")
@@ -58,7 +60,12 @@ rtf_indentation <- function(string) {
 #' @return A character string containing the processed RTF content with line
 #' breaks replaced by spaces.
 #'
+#' @examples
+#' \dontrun{
+#' rtf_line_to_spaces('{A new{\\line}line}')
+#' }
+#'
 #' @keywords internal
-rtf_linebreaks <- function(string) {
+rtf_line_to_spaces <- function(string) {
   stringr::str_replace_all(string, "\\{\\\\line\\}", " ")
 }
