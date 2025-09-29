@@ -22,6 +22,6 @@ functions.
 }
 \examples{
 \dontrun{
-rtf_to_df(rtf_example(22))
+rtf_to_df(rtf_example(1))
 }
 }
