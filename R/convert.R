@@ -73,7 +73,7 @@ html_to_dataframe <- function(html) {
 #'
 #' @examples
 #' \dontrun{
-#' rtf_to_df(rtf_example(22))
+#' rtf_to_df(rtf_example(1))
 #' }
 rtf_to_df <- function(file) {
   temp_rtf <- tempfile(fileext = ".rtf")
@@ -87,7 +87,8 @@ rtf_to_df <- function(file) {
   rtf_to_html(temp_rtf) |>
     html_to_dataframe() |>
     manage_exceptions() |>
-    strip_pagination()
+    strip_pagination() |>
+    nbsp_to_spaces()
 }
 
 #' Convert an RTF Table into an ARD data frame
