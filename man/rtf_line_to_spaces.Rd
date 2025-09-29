@@ -20,7 +20,7 @@ cell is represented as a single character vector.
 }
 \examples{
 \dontrun{
-rtf_line_to_spaces("{A new{\\\\line}line}")
+rtf_line_to_spaces('{A new{\\\\line}line}')
 }
 
 }

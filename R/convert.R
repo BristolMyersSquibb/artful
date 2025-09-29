@@ -78,6 +78,8 @@ rtf_to_df <- function(file) {
     rtf_spaces_to_nbsp() |>
     rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
+
+  rtf_to_html(temp_rtf)
 }
 
 #' Convert an RTF Table into an ARD data frame

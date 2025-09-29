@@ -60,7 +60,7 @@ rtf_spaces_to_nbsp <- function(string) {
 #'
 #' @examples
 #' \dontrun{
-#' rtf_line_to_spaces("{A new{\\line}line}")
+#' rtf_line_to_spaces('{A new{\\line}line}')
 #' }
 #'
 #' @keywords internal
