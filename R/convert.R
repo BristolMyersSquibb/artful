@@ -88,7 +88,6 @@ rtf_to_df <- function(file) {
   rtf_to_html(temp_rtf) |>
     html_to_dataframe() |>
     nbsp_to_spaces() |>
-    manage_exceptions() |>
     strip_pagination()
 }
 
