@@ -3,4 +3,7 @@
 export(rtf_to_ard)
 export(rtf_to_df)
 export(rtf_to_pdf)
+import(dplyr)
 import(ellmer)
+import(purrr)
+import(tidyr)

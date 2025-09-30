@@ -10,7 +10,6 @@ utils::globalVariables(c(
   "value", # <strip_indentation>
   "variable_label0", # <strip_indentation>
   "variable_level", # <strip_indentation>
-  "id", # <strip_indentation>
   "group1_level", # <separate_bign>
   NULL
 ))
