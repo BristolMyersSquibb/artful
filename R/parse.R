@@ -230,6 +230,64 @@ nbsp_to_spaces <- function(data) {
     )
 }
 
+
+#' Convert indentation to variable cols
+#'
+#' Unlike `strip_indentation(), this function is designed to be called after a
+#' dataframe has been generated from an RTF instead of during the generation.
+#' In effect this function pivots a data frame wider, using indentation to infer
+#' how the pivoting should happen.
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \dontrun{
+#' indentation_to_variables(rtf_to_df(rtf_example(13)))
+#' }
+indentation_to_variables <- function(data) {
+  indents <- data |>
+    mutate(
+      space_count = stringr::str_length(stringr::str_extract(data[[1]], "^ *"))
+    ) |>
+    mutate(space_group = cumsum(space_count == 0)) |>
+    mutate(
+      counter = case_when(
+        space_count == 0 ~ 0,
+        space_count > lag(space_count, default = 0) ~ 1,
+        space_count == lag(space_count, default = 0) ~ 0,
+        space_count < lag(space_count, default = 0) ~ -1
+      )
+    ) |>
+    mutate(indent_level = cumsum(counter), .by = space_group)
+
+  indents |>
+    rename(value = 1) |>
+    mutate(
+      across(
+        1:3,
+        stringr::str_squish
+      )
+    ) |>
+    mutate(
+      across(
+        1:3,
+        ~ stringr::str_replace_all(.x, "\\(\\s+", "(")
+      )
+    ) |>
+    mutate(variable_label = paste0("variable_", indent_level + 1)) |>
+    mutate(id = row_number()) |> # prevents `pivot_wider()` errors caused by duplicate values
+    pivot_wider(
+      names_from = variable_label,
+      values_from = value,
+      id_cols = everything()
+    ) |>
+    group_by(space_group) |>
+    fill(starts_with("variable_")) |>
+    ungroup() |>
+    select(-space_count:-id)
+}
+
+
 #' Strip indentation
 #'
 #' Convert indentation identified by "&nbsp;" values into a series of
