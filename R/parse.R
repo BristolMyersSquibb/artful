@@ -280,8 +280,8 @@ indentation_to_variables <- function(data) {
 
   indents |>
     rename(value = 1) |>
-    clean_whitespace(cols = 1:3) |>
     mutate(variable_label = paste0("variable_", indent_level + 1)) |>
+    clean_whitespace(cols = everything()) |>
     mutate(id = row_number()) |> # prevents `pivot_wider()` errors caused by duplicate values
     pivot_wider(
       names_from = variable_label,
