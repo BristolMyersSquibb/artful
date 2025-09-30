@@ -52,7 +52,7 @@ rtf_spaces_to_nbsp <- function(string) {
 #' Replace line breaks with spaces in RTF encoded strings
 #'
 #' Processes an RTF (Rich Text Format) encoded string by replacing line breaks,
-#' represented as "{\\line}", with spaces. This ensures all content in a single
+#' represented as "\{\line\}", with spaces. This ensures all content in a single
 #' cell is represented as a single character vector.
 #'
 #' @param string A character vector specifying the RTF encodings.
