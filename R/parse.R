@@ -105,6 +105,7 @@ strip_repeat_colnames <- function(data) {
 #' @return A data frame with the repeat column names removed.
 #'
 #' @keywords internal
+#' @autoglobal
 set_colnames <- function(data) {
   # This assumes column names are in the first row (which is the case if this
   # function is called after calling `strip_header()`)
@@ -257,6 +258,7 @@ clean_whitespace <- function(data, cols) {
 #' how the pivoting should happen.
 #'
 #' @keywords internal
+#' @autoglobal
 #'
 #' @examples
 #' \dontrun{
