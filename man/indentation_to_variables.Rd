@@ -17,4 +17,3 @@ how the pivoting should happen.
 indentation_to_variables(rtf_to_df(rtf_example(13)))
 }
 }
-\keyword{internal}

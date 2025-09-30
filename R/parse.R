@@ -257,7 +257,7 @@ clean_whitespace <- function(data, cols) {
 #' In effect this function pivots a data frame wider, using indentation to infer
 #' how the pivoting should happen.
 #'
-#' @keywords internal
+#' @export
 #' @autoglobal
 #'
 #' @examples
