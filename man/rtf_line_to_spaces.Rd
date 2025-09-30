@@ -15,8 +15,8 @@ breaks replaced by spaces.
 }
 \description{
 Processes an RTF (Rich Text Format) encoded string by replacing line breaks,
-represented as "\{\line\}", with spaces. This ensures all content in a single
-cell is represented as a single character vector.
+represented as \code{\\{\\line\\}}, with spaces. This ensures all content in
+a single cell is represented as a single character vector.
 }
 \examples{
 \dontrun{
