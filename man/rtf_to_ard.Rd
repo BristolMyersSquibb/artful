@@ -52,3 +52,8 @@ rtf_to_ard(rtf = rtf_file)
 }
 
 }
+\examples{
+\dontrun{
+rtf_to_ard(rtf_example(4))
+}
+}
