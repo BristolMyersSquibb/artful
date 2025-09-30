@@ -48,8 +48,8 @@ temp_rtf <- tempfile(fileext = ".rtf")
 
 failure_paths[[1]] |>
   readr::read_file() |>
-  rtf_indentation() |>
-  rtf_linebreaks() |>
+  rtf_spaces_to_nbsp() |>
+  rtf_line_to_spaces() |>
   readr::write_file(temp_rtf)
 
 df <- rtf_to_html(temp_rtf) |>
@@ -119,8 +119,8 @@ temp_rtf <- tempfile(fileext = ".rtf")
 
 failure_paths[[3]] |>
   readr::read_file() |>
-  rtf_indentation() |>
-  rtf_linebreaks() |>
+  rtf_spaces_to_nbsp() |>
+  rtf_line_to_spaces() |>
   readr::write_file(temp_rtf)
 
 df <- rtf_to_html(temp_rtf) |>
@@ -190,8 +190,8 @@ temp_rtf <- tempfile(fileext = ".rtf")
 
 failure_paths[[4]] |>
   readr::read_file() |>
-  rtf_indentation() |>
-  rtf_linebreaks() |>
+  rtf_spaces_to_nbsp() |>
+  rtf_line_to_spaces() |>
   readr::write_file(temp_rtf)
 
 df <- rtf_to_html(temp_rtf) |>
@@ -261,8 +261,8 @@ temp_rtf <- tempfile(fileext = ".rtf")
 
 failure_paths[[5]] |>
   readr::read_file() |>
-  rtf_indentation() |>
-  rtf_linebreaks() |>
+  rtf_spaces_to_nbsp() |>
+  rtf_line_to_spaces() |>
   readr::write_file(temp_rtf)
 
 df <- rtf_to_html(temp_rtf) |>
@@ -329,8 +329,8 @@ temp_rtf <- tempfile(fileext = ".rtf")
 
 failure_paths[[6]] |>
   readr::read_file() |>
-  rtf_indentation() |>
-  rtf_linebreaks() |>
+  rtf_spaces_to_nbsp() |>
+  rtf_line_to_spaces() |>
   readr::write_file(temp_rtf)
 
 df <- rtf_to_html(temp_rtf) |>
