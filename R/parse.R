@@ -230,6 +230,24 @@ nbsp_to_spaces <- function(data) {
     )
 }
 
+#' Clean whitespace
+#'
+#' Many parsed columns contain excess whitespace, which often isn't wanted.
+#'
+#' @param data dataframe
+#' @param cols index of columns to clean
+#'
+#' @noRd
+clean_whitespace <- function(data, cols) {
+  data |>
+    mutate(
+      across(
+        {{ cols }},
+        ~ stringr::str_squish(.x) |>
+          stringr::str_replace_all("\\(\\s+", "(")
+      )
+    )
+}
 
 #' Convert indentation to variable cols
 #'
@@ -262,18 +280,7 @@ indentation_to_variables <- function(data) {
 
   indents |>
     rename(value = 1) |>
-    mutate(
-      across(
-        1:3,
-        stringr::str_squish
-      )
-    ) |>
-    mutate(
-      across(
-        1:3,
-        ~ stringr::str_replace_all(.x, "\\(\\s+", "(")
-      )
-    ) |>
+    clean_whitespace(cols = 1:3) |>
     mutate(variable_label = paste0("variable_", indent_level + 1)) |>
     mutate(id = row_number()) |> # prevents `pivot_wider()` errors caused by duplicate values
     pivot_wider(
