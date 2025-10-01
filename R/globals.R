@@ -5,7 +5,7 @@ utils::globalVariables(c(
   "space_count", # <indentation_to_variables>
   "counter", # <indentation_to_variables>
   "space_group", # <indentation_to_variables>
-  "indent_level", # <indentation_to_variables>
+  ".indent", # <indentation_to_variables>
   "variable_label", # <indentation_to_variables>
   "value", # <indentation_to_variables>
   "nbsp_count", # <strip_indentation>
