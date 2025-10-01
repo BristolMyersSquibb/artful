@@ -282,7 +282,8 @@ indentation_to_variables <- function(data) {
 
   indents |>
     rename(value = 1) |>
-    mutate(variable_label = paste0("variable_", indent_level + 1)) |>
+    mutate(value2 = value) |>
+    mutate(variable_label = paste0(".variable_", indent_level + 1)) |>
     clean_whitespace(cols = everything()) |>
     mutate(id = row_number()) |> # prevents `pivot_wider()` errors caused by duplicate values
     pivot_wider(
@@ -291,9 +292,12 @@ indentation_to_variables <- function(data) {
       id_cols = everything()
     ) |>
     group_by(space_group) |>
-    fill(starts_with("variable_")) |>
+    fill(starts_with(".variable_")) |>
     ungroup() |>
-    select(-space_count:-id)
+    mutate(.indent = indent_level) |>
+    mutate(label = value2) |>
+    select(-space_count:-id) |>
+    select(starts_with("."), label, everything())
 }
 
 
