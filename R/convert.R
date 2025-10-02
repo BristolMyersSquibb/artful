@@ -78,7 +78,6 @@ html_to_dataframe <- function(html) {
 #' }
 rtf_to_df <- function(file) {
   temp_rtf <- tempfile(fileext = ".rtf")
-
   file |>
     readr::read_file() |>
     rtf_spaces_to_nbsp() |>
