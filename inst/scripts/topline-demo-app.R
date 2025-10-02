@@ -74,8 +74,8 @@ rt_dm_demo <- function(input = example_data("rt-dm-demo.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -224,7 +224,7 @@ rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
+    artful:::rtf_spaces_to_nbsp() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -337,8 +337,8 @@ rt_ef_acr20 <- function(input = example_data("rt-ef-acr20.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -512,8 +512,8 @@ rt_ef_aacr50 <- function(input = example_data("rt-ef-aacr50.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -701,8 +701,8 @@ rt_ef_aacr70 <- function(input = example_data("rt-ef-aacr70.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -892,8 +892,8 @@ rt_ae_ae1 <- function(input = example_data("rt-ae-ae1.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -965,7 +965,7 @@ rt_ae_ae1 <- function(input = example_data("rt-ae-ae1.rtf")) {
         unlist
       )
     ) |>
-    mutate(variable_level = NA, .after = variable)
+    dplyr::mutate(variable_level = NA, .after = variable)
 
   return(ard_card)
 }
@@ -978,8 +978,8 @@ rt_ae_saesoc1 <- function(input = example_data("rt-ae-saesoc1.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>

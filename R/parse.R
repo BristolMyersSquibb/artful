@@ -105,6 +105,7 @@ strip_repeat_colnames <- function(data) {
 #' @return A data frame with the repeat column names removed.
 #'
 #' @keywords internal
+#' @autoglobal
 set_colnames <- function(data) {
   # This assumes column names are in the first row (which is the case if this
   # function is called after calling `strip_header()`)
@@ -229,6 +230,76 @@ nbsp_to_spaces <- function(data) {
       )
     )
 }
+
+#' Clean whitespace
+#'
+#' Many parsed columns contain excess whitespace, which often isn't wanted.
+#'
+#' @param data dataframe
+#' @param cols index of columns to clean
+#'
+#' @noRd
+clean_whitespace <- function(data, cols) {
+  data |>
+    mutate(
+      across(
+        {{ cols }},
+        ~ stringr::str_squish(.x) |>
+          stringr::str_replace_all("\\(\\s+", "(")
+      )
+    )
+}
+
+#' Convert indentation to variable cols
+#'
+#' Unlike `strip_indentation(), this function is designed to be called after a
+#' dataframe has been generated from an RTF instead of during the generation.
+#' In effect this function pivots a data frame wider, using indentation to infer
+#' how the pivoting should happen.
+#'
+#' @export
+#' @autoglobal
+#'
+#' @examples
+#' \dontrun{
+#' indentation_to_variables(rtf_to_df(rtf_example(13)))
+#' }
+indentation_to_variables <- function(data) {
+  indents <- data |>
+    mutate(
+      space_count = stringr::str_length(stringr::str_extract(data[[1]], "^ *"))
+    ) |>
+    mutate(space_group = cumsum(space_count == 0)) |>
+    mutate(
+      counter = case_when(
+        space_count == 0 ~ 0,
+        space_count > lag(space_count, default = 0) ~ 1,
+        space_count == lag(space_count, default = 0) ~ 0,
+        space_count < lag(space_count, default = 0) ~ -1
+      )
+    ) |>
+    mutate(indent_level = cumsum(counter), .by = space_group)
+
+  indents |>
+    rename(value = 1) |>
+    mutate(value2 = value) |>
+    mutate(variable_label = paste0(".variable_", indent_level + 1)) |>
+    clean_whitespace(cols = everything()) |>
+    mutate(id = row_number()) |> # prevents `pivot_wider()` errors caused by duplicate values
+    pivot_wider(
+      names_from = variable_label,
+      values_from = value,
+      id_cols = everything()
+    ) |>
+    group_by(space_group) |>
+    fill(starts_with(".variable_")) |>
+    ungroup() |>
+    mutate(.indent = indent_level) |>
+    mutate(label = value2) |>
+    select(-space_count:-id) |>
+    select(starts_with("."), label, everything())
+}
+
 
 #' Strip indentation
 #'

@@ -38,8 +38,8 @@ rt_dm_demo <- function(input = example_data("rt-dm-demo.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -87,7 +87,9 @@ rt_dm_demo <- function(input = example_data("rt-dm-demo.rtf")) {
     dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    dplyr::mutate(stat_name = dplyr::if_else(is.na(stat_name), "n", stat_name)) |>
+    dplyr::mutate(
+      stat_name = dplyr::if_else(is.na(stat_name), "n", stat_name)
+    ) |>
     dplyr::filter(!is.na(stat)) |>
     dplyr::left_join(stat_lookup)
 
@@ -114,7 +116,11 @@ rt_dm_demo <- function(input = example_data("rt-dm-demo.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- rt-dm-basedz.rtf ----
@@ -123,7 +129,7 @@ rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
+    artful:::rtf_spaces_to_nbsp() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -171,7 +177,9 @@ rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
     dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    dplyr::mutate(stat_name = dplyr::if_else(is.na(stat_name), "n", stat_name)) |>
+    dplyr::mutate(
+      stat_name = dplyr::if_else(is.na(stat_name), "n", stat_name)
+    ) |>
     dplyr::filter(!is.na(stat)) |>
     dplyr::left_join(stat_lookup)
 
@@ -201,7 +209,11 @@ rt_dm_basedz <- function(input = example_data("rt-dm-basedz.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- Slide 8 -----------------------------------------------------------------
@@ -212,7 +224,7 @@ rt_ds_pretrt <- function(input = example_data("rt-ds-pretrt.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
+    artful:::rtf_spaces_to_nbsp() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -269,7 +281,11 @@ rt_ds_pretrt <- function(input = example_data("rt-ds-pretrt.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- rt-ds-trtwk16.rtf ----
@@ -278,7 +294,7 @@ rt_ds_trtwk16 <- function(input = example_data("rt-ds-trtwk16.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
+    artful:::rtf_spaces_to_nbsp() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -309,7 +325,9 @@ rt_ds_trtwk16 <- function(input = example_data("rt-ds-trtwk16.rtf")) {
     dplyr::select(
       -c(.id, stat_list, n_values)
     ) |>
-    dplyr::mutate(stat_name = dplyr::if_else(is.na(stat_name), "n", stat_name)) |>
+    dplyr::mutate(
+      stat_name = dplyr::if_else(is.na(stat_name), "n", stat_name)
+    ) |>
     dplyr::filter(!is.na(stat)) |>
     dplyr::left_join(stat_lookup)
 
@@ -336,7 +354,11 @@ rt_ds_trtwk16 <- function(input = example_data("rt-ds-trtwk16.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- Slide 9 -----------------------------------------------------------------
@@ -347,8 +369,8 @@ rt_ef_acr20 <- function(input = example_data("rt-ef-acr20.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -422,7 +444,11 @@ rt_ef_acr20 <- function(input = example_data("rt-ef-acr20.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- rt-ef-aacr50.rtf ----
@@ -431,8 +457,8 @@ rt_ef_aacr50 <- function(input = example_data("rt-ef-aacr50.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -530,7 +556,11 @@ rt_ef_aacr50 <- function(input = example_data("rt-ef-aacr50.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- rt-ef-aacr70.rtf ----
@@ -539,8 +569,8 @@ rt_ef_aacr70 <- function(input = example_data("rt-ef-aacr70.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -640,7 +670,11 @@ rt_ef_aacr70 <- function(input = example_data("rt-ef-aacr70.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- Slide 10 ----------------------------------------------------------------
@@ -651,8 +685,8 @@ rt_ef_pasi <- function(input = example_data("rt-ef-pasi.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -752,7 +786,11 @@ rt_ef_pasi <- function(input = example_data("rt-ef-pasi.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- rt-ef-enth ----
@@ -761,8 +799,8 @@ rt_ef_enth <- function(input = example_data("rt-ef-enth.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -862,7 +900,11 @@ rt_ef_enth <- function(input = example_data("rt-ef-enth.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- rt-ef-dact ----
@@ -871,8 +913,8 @@ rt_ef_dact <- function(input = example_data("rt-ef-dact.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -972,7 +1014,11 @@ rt_ef_dact <- function(input = example_data("rt-ef-dact.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- Slide 11 ----------------------------------------------------------------
@@ -983,8 +1029,8 @@ rt_ef_mda <- function(input = example_data("rt-ef-mda.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -1084,7 +1130,11 @@ rt_ef_mda <- function(input = example_data("rt-ef-mda.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- rt-ef-cfbdas ----
@@ -1093,8 +1143,8 @@ rt_ef_cfbdas <- function(input = example_data("rt-ef-cfbdas.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rt)
 
   ard_ish <- artful:::rtf_to_html(temp_rt) |>
@@ -1200,7 +1250,11 @@ rt_ef_cfbdas <- function(input = example_data("rt-ef-cfbdas.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- Slide 12 ----------------------------------------------------------------
@@ -1211,8 +1265,8 @@ rt_ef_cfbsvdh <- function(input = example_data("rt-ef-cfbsvdh.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -1318,7 +1372,11 @@ rt_ef_cfbsvdh <- function(input = example_data("rt-ef-cfbsvdh.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- Slide 13 ----------------------------------------------------------------
@@ -1329,8 +1387,8 @@ rt_ef_cfbhaq <- function(input = example_data("rt-ef-cfbhaq.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -1436,7 +1494,11 @@ rt_ef_cfbhaq <- function(input = example_data("rt-ef-cfbhaq.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- rt-ef-cfbsf36 ----
@@ -1453,8 +1515,8 @@ rt_ae_ae1 <- function(input = example_data("rt-ae-ae1.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -1516,7 +1578,11 @@ rt_ae_ae1 <- function(input = example_data("rt-ae-ae1.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- Slide 15 ----------------------------------------------------------------
@@ -1527,8 +1593,8 @@ rt_ae_aesoc1 <- function(input = example_data("rt-ae-aesoc1.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -1590,7 +1656,11 @@ rt_ae_aesoc1 <- function(input = example_data("rt-ae-aesoc1.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- Slide 16 & 17 -----------------------------------------------------------
@@ -1601,8 +1671,8 @@ rt_ae_saesoc1 <- function(input = example_data("rt-ae-saesoc1.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -1678,7 +1748,11 @@ rt_ae_saesoc1 <- function(input = example_data("rt-ae-saesoc1.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- Slide 18 ----------------------------------------------------------------
@@ -1693,8 +1767,8 @@ rt_ae_aedissoc1 <- function(input = example_data("rt-ae-aedissoc1.rtf")) {
 
   input |>
     readr::read_file() |>
-    artful:::rtf_indentation() |>
-    artful:::rtf_linebreaks() |>
+    artful:::rtf_spaces_to_nbsp() |>
+    artful:::rtf_line_to_spaces() |>
     readr::write_file(temp_rtf)
 
   ard_ish <- artful:::rtf_to_html(temp_rtf) |>
@@ -1770,7 +1844,11 @@ rt_ae_aedissoc1 <- function(input = example_data("rt-ae-aedissoc1.rtf")) {
     )
 
   dplyr::bind_rows(big_n, ard) |>
-    dplyr::select(tidyselect::starts_with("group"), tidyselect::starts_with("variable"), tidyselect::starts_with("stat"))
+    dplyr::select(
+      tidyselect::starts_with("group"),
+      tidyselect::starts_with("variable"),
+      tidyselect::starts_with("stat")
+    )
 }
 
 # ---- Slide 20 ----------------------------------------------------------------
