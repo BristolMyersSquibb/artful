@@ -25,3 +25,12 @@ rtf_example <- function(example_num) {
     mustWork = TRUE
   )
 }
+
+#' @noRd
+prompt_path <- function(file) {
+  system.file(
+    "prompts",
+    file,
+    package = "artful"
+  )
+}

@@ -20,100 +20,49 @@
 #'   \item{stat}{The statistical value as string}
 #' }
 #'
-#' @details
-#' This function performs the following steps:
-#' \enumerate{
-#'   \item Converts the input RTF file to PDF format for visual processing
-#'   \item Converts the RTF to HTML for text extraction
-#'   \item Uses multi-shot prompting with three example RTF/PDF pairs to guide
-#'     the LLM in understanding the expected output format
-#'   \item Employs structured data extraction via \code{chat_structured()} to
-#'     ensure the output conforms to ARD standards
-#'   \item Returns results as a tibble for easy manipulation in R
-#' }
-#'
 #' @note
 #' Requires valid OpenAI API credentials to be configured. The function
 #' relies on example files included in the package for multi-shot prompting.
 #'
 #' @examples
 #' \dontrun{
-#' rtf_file <- system.file("prompts","example-4.rtf", package = "artful")
-#' rtf_to_ard(rtf = rtf_file)
+#' rtf_to_ard("inst/extdata/examples/rt-ae-ae1.rtf")
 #' }
 #'
 #' @export
 rtf_to_ard <- function(rtf) {
   # Prevent time outs due to long processing times
-  withr::local_options(ellmer_timeout_s = 60 * 10)
+  withr::local_options(ellmer_timeout_s = 60 * 30)
 
-  user_pdf <- tempfile(fileext = ".pdf")
-  rtf_to_pdf(rtf, pdf_path = user_pdf)
-
-  system_prompt <- function() {
+  system_prompt <-
     "
-    You are an expert data extraction bot specializing in pharmaceutical
-    clinical trial data. Your sole purpose is to convert tables into structured
-    JSON format that strictly complies with the Analysis Results Data (ARD)
-    standard. You are precise, methodical, and never invent data.
-  "
-  }
+    You are an expert data scientist specialised in generating CDISC
+    Analysis-Ready Data (ARD).
+    "
 
   prompt <- interpolate_file(
-    system.file("prompts", "prompt.md", package = "artful"),
-    user_html = rtf_to_html(rtf),
-    example_1_html = rtf_to_html(
-      system.file(
-        "prompts",
-        "example-1.rtf",
-        package = "artful"
-      )
-    ),
-    example_2_html = rtf_to_html(
-      system.file(
-        "prompts",
-        "example-2.rtf",
-        package = "artful"
-      )
-    ),
-    example_3_html = rtf_to_html(
-      system.file(
-        "prompts",
-        "example-3.rtf",
-        package = "artful"
-      )
-    )
+    prompt_path("prompt.md"),
+    user_json = jsonlite::toJSON(rtf_to_df(rtf)),
+    example_1_raw = readr::read_file(prompt_path("example-1-raw.json")),
+    example_1_ard = readr::read_file(prompt_path("example-1-ard.json")),
+    example_2_raw = readr::read_file(prompt_path("example-2-raw.json")),
+    example_2_ard = readr::read_file(prompt_path("example-2-ard.json"))
   )
 
   chat <- chat_openai(
-    system_prompt = system_prompt(),
-    model = "gpt-4o",
+    system_prompt = system_prompt,
+    base_url = "http://10.13.13.19:3000/api",
+    api_key = Sys.getenv("OPENWEBUI_API_KEY"),
+    model = "gpt-oss:120b"
   )
+
+  # chat <- chat_openai(
+  #   system_prompt = system_prompt,
+  #   model = "gpt-4o",
+  # )
 
   chat_output <- chat$chat_structured(
     prompt,
-    content_pdf_file(user_pdf),
-    content_pdf_file(
-      system.file(
-        "prompts",
-        "example-1.pdf",
-        package = "artful"
-      )
-    ),
-    content_pdf_file(
-      system.file(
-        "prompts",
-        "example-2.pdf",
-        package = "artful"
-      )
-    ),
-    content_pdf_file(
-      system.file(
-        "prompts",
-        "example-3.pdf",
-        package = "artful"
-      )
-    ),
     type = type_ard_array(),
     echo = "output"
   )
