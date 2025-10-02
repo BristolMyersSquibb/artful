@@ -965,7 +965,7 @@ rt_ae_ae1 <- function(input = example_data("rt-ae-ae1.rtf")) {
         unlist
       )
     ) |>
-    mutate(variable_level = NA, .after = variable)
+    dplyr::mutate(variable_level = NA, .after = variable)
 
   return(ard_card)
 }
