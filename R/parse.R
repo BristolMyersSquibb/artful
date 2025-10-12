@@ -191,16 +191,21 @@ strip_pagination <- function(data) {
 
   x_counter <- 1
   for (i in colnames_missing_indices) {
-    filtered <- filter(non_repeating, if_all(!i, ~ .x == ""))
-    if (nrow(filtered != 0)) {
-      replacement <- filtered |>
-        slice(1L) |>
-        pull(i)
+    # For the first column, keep it as a space if empty
+    if (i == 1) {
+      colnames[i] <- " "
     } else {
-      replacement <- paste0("X", x_counter)
-      x_counter <- x_counter + 1
+      filtered <- filter(non_repeating, if_all(!i, ~ .x == ""))
+      if (nrow(filtered != 0)) {
+        replacement <- filtered |>
+          slice(1L) |>
+          pull(i)
+      } else {
+        replacement <- paste0("X", x_counter)
+        x_counter <- x_counter + 1
+      }
+      colnames[i] <- replacement
     }
-    colnames[i] <- replacement
   }
 
   non_repeating |>
@@ -265,6 +270,13 @@ clean_whitespace <- function(data, cols) {
 #' indentation_to_variables(rtf_to_df(rtf_example(13)))
 #' }
 indentation_to_variables <- function(data) {
+  # Save the original first column name
+  # If empty, use a single space for proper rendering
+  original_col_name <- names(data)[1]
+  if (original_col_name == "") {
+    original_col_name <- " "
+  }
+
   indents <- data |>
     mutate(
       space_count = stringr::str_length(stringr::str_extract(data[[1]], "^ *"))
@@ -295,9 +307,9 @@ indentation_to_variables <- function(data) {
     fill(starts_with(".variable_")) |>
     ungroup() |>
     mutate(.indent = indent_level) |>
-    mutate(label = value2) |>
+    mutate(!!original_col_name := value2) |>
     select(-space_count:-id) |>
-    select(starts_with("."), label, everything())
+    select(!!original_col_name, everything(), starts_with("."))
 }
 
 
