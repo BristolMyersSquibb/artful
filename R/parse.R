@@ -210,7 +210,8 @@ strip_pagination <- function(data) {
 
   non_repeating |>
     rename_with(~colnames) |>
-    slice(-1L)
+    slice(-1L) |>
+    distinct() # Remove duplicate rows (e.g., indentation group titles)
 }
 
 #' Replace non-breaking spaces with spaces
