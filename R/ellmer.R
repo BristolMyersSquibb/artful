@@ -49,17 +49,17 @@ rtf_to_ard <- function(rtf) {
     example_2_ard = readr::read_file(prompt_path("example-2-ard.json"))
   )
 
-  chat <- chat_openai(
-    system_prompt = system_prompt,
-    base_url = "http://10.13.13.19:3000/api",
-    api_key = Sys.getenv("OPENWEBUI_API_KEY"),
-    model = "gpt-oss:120b"
-  )
-
   # chat <- chat_openai(
   #   system_prompt = system_prompt,
-  #   model = "gpt-4o",
+  #   base_url = "http://10.13.13.19:3000/api",
+  #   api_key = Sys.getenv("OPENWEBUI_API_KEY"),
+  #   model = "gpt-oss:120b"
   # )
+
+  chat <- chat_openai(
+    system_prompt = system_prompt,
+    model = "gpt-4o",
+  )
 
   chat_output <- chat$chat_structured(
     prompt,
