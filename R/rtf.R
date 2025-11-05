@@ -37,8 +37,13 @@ rtf_spaces_to_nbsp <- function(string) {
     stringr::str_replace_all("(\\{)( +)(.*?\\\\cell\\})", function(match) {
       groups <- stringr::str_match(match, "(\\{)( +)(.*?\\\\cell\\})")
       space_count <- nchar(groups[, 3])
-      nbsp_replacement <- paste(rep("&nbsp;", space_count), collapse = "")
-      paste0(groups[, 2], nbsp_replacement, groups[, 4])
+      # Handle NA or invalid space counts (vectorized)
+      space_count[is.na(space_count) | space_count < 0] <- 0
+      # Create nbsp replacement for each match
+      nbsp_replacements <- vapply(space_count, function(n) {
+        paste(rep("&nbsp;", n), collapse = "")
+      }, character(1))
+      paste0(groups[, 2], nbsp_replacements, groups[, 4])
     }) |>
     stringr::str_replace_all("\\\\li192", "&nbsp;&nbsp;") |>
     stringr::str_replace_all("\\\\li384", "&nbsp;&nbsp;&nbsp;&nbsp;") |>
