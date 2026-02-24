@@ -21,4 +21,11 @@ this function is preferred because the actions of stripping table elements
 are dependent on each other (e.g., to remove repeat column names, we first
 must identify these by stripping the header).
 }
+\details{
+When pages share the same column structure, the single-structure path is
+used (anti-join approach). When pages cycle between different column
+structures (e.g., different treatment groups on alternating pages), the
+multi-structure path splits pages, joins them by row labels, and produces a
+single wide dataframe.
+}
 \keyword{internal}
