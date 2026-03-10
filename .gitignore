@@ -51,3 +51,6 @@ rsconnect/
 
 # Table examples provided by BMS
 inst/extdata/
+
+# Test data
+tests/testthat/fixtures/
